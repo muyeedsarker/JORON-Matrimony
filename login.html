@@ -35,6 +35,10 @@
 <script type="module">
 import{auth,persistenceReady,signInWithCustomToken,ensureUserProfile}from'./assets/firebase-client.js';
 import{GoogleAuthProvider,FacebookAuthProvider,signInWithRedirect,getRedirectResult}from'https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js';
+/* firebase-client.js historically auto-wires this page. Replace the affected DOM nodes
+   before binding the new controller so its old listeners cannot stop our handlers. */
+const replaceNode=id=>{const old=document.getElementById(id);if(!old)return null;const fresh=old.cloneNode(true);old.replaceWith(fresh);return fresh};
+replaceNode('googleBtn');replaceNode('facebookBtn');replaceNode('emailForm');replaceNode('forgot');
 const $=id=>document.getElementById(id),msg=$('msg'),form=$('emailForm');
 const googleProvider=new GoogleAuthProvider(),facebookProvider=new FacebookAuthProvider();
 googleProvider.setCustomParameters({prompt:'select_account'});facebookProvider.setCustomParameters({display:'popup'});
@@ -48,7 +52,7 @@ async function finishRedirect(){try{await persistenceReady;const r=await getRedi
 $('facebookBtn').onclick=()=>oauthRedirect(facebookProvider,'Facebook');$('googleBtn').onclick=()=>oauthRedirect(googleProvider,'Google');
 $('otpLoginBtn').onclick=()=>location.href='otp-login.html'+(next?'?next='+encodeURIComponent(next):'');
 $('idLoginBtn').onclick=()=>{form.style.display=form.style.display==='block'?'none':'block';if(form.style.display==='block')$('email').focus()};
-form.addEventListener('submit',async e=>{e.preventDefault();const identifier=$('email').value.trim(),password=$('password').value;if(!identifier||!password)return setMsg('Member ID, মোবাইল/ইমেইল এবং পাসওয়ার্ড দিন');try{setMsg('⏳ নিরাপদে লগইন হচ্ছে...');await persistenceReady;const d=await postJson('https://us-central1-joron-d7742.cloudfunctions.net/loginWithIdentifier',{identifier,password});if(!d.customToken)throw new Error('AUTH_SERVICE_UNAVAILABLE');await signInWithCustomToken(auth,d.customToken);setMsg('✅ লগইন সফল হচ্ছে...');setTimeout(go,400)}catch(e){console.error(e);setMsg('❌ '+friendly(e))}});
+form.addEventListener('submit',async e=>{e.preventDefault();e.stopImmediatePropagation();const identifier=$('email').value.trim(),password=$('password').value;if(!identifier||!password)return setMsg('Member ID, মোবাইল/ইমেইল এবং পাসওয়ার্ড দিন');try{setMsg('⏳ নিরাপদে লগইন হচ্ছে...');await persistenceReady;const d=await postJson('https://us-central1-joron-d7742.cloudfunctions.net/loginWithIdentifier',{identifier,password});if(!d.customToken)throw new Error('AUTH_SERVICE_UNAVAILABLE');await signInWithCustomToken(auth,d.customToken);setMsg('✅ লগইন সফল হচ্ছে...');setTimeout(go,400)}catch(e){console.error(e);setMsg('❌ '+friendly(e))}});
 $('forgot').onclick=async()=>{const identifier=$('email').value.trim();if(!identifier)return setMsg('আগে Member ID / মোবাইল / ইমেইল লিখুন');try{setMsg('⏳ রিসেট তথ্য যাচাই হচ্ছে...');await postJson('https://us-central1-joron-d7742.cloudfunctions.net/passwordResetByIdentifier',{identifier});setMsg('✅ অ্যাকাউন্ট থাকলে রিসেট লিংক ইমেইলে পাঠানো হবে।')}catch(e){console.error(e);setMsg('❌ '+friendly(e))}};
 finishRedirect();
 </script></body></html>
