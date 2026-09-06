@@ -82,22 +82,21 @@ exports.adminReviewPayment = onRequest(async (req, res) => {
       if (payment.paymentStatus !== "pending") { const error = new Error("Payment already reviewed"); error.code = "ALREADY_REVIEWED"; throw error; }
       const expectedPrice = PLAN_PRICES[payment.selectedPlan];
       if (!expectedPrice || Number(payment.membershipPrice) !== expectedPrice) { const error = new Error("Invalid payment plan or amount"); error.code = "INVALID_PAYMENT_DATA"; throw error; }
-      const now = FieldValue.serverTimestamp();
+      const reviewedAt = FieldValue.serverTimestamp();
       if (action === "approve") {
-        tx.set(userRef, { membershipPlan: payment.selectedPlan, membershipDisplayName: payment.membershipDisplayName || payment.selectedPlan, membershipPrice: expectedPrice, membershipStatus: "active", paymentStatus: "verified", membershipActivatedAt: now, paymentVerifiedAt: now, paymentVerifiedBy: ADMIN_UID }, { merge: true });
-        tx.set(paymentRef, { paymentStatus: "verified", membershipStatus: "active", verifiedAt: now, verifiedBy: ADMIN_UID, verifiedAmount: expectedPrice }, { merge: true });
+        tx.update(paymentRef, { paymentStatus: "approved", membershipStatus: "active", reviewedAt, reviewedBy: admin.uid });
+        tx.set(userRef, { membershipPlan: payment.selectedPlan, paymentStatus: "paid", membershipStatus: "active", updatedAt: reviewedAt }, { merge: true });
       } else {
-        tx.set(userRef, { membershipStatus: "rejected", paymentStatus: "rejected", membershipRejectedAt: now, paymentRejectedBy: ADMIN_UID }, { merge: true });
-        tx.set(paymentRef, { paymentStatus: "rejected", membershipStatus: "rejected", rejectedAt: now, rejectedBy: ADMIN_UID }, { merge: true });
+        tx.update(paymentRef, { paymentStatus: "rejected", reviewedAt, reviewedBy: admin.uid });
+        tx.set(userRef, { paymentStatus: "rejected", membershipStatus: "pending", updatedAt: reviewedAt }, { merge: true });
       }
-      return { selectedPlan: payment.selectedPlan, expectedPrice };
+      return { uid, action };
     });
-    return res.json({ ok: true, action, ...result });
+    return res.json({ ok: true, ...result });
   } catch (error) {
-    const status = error.code === "NOT_FOUND" ? 404 : error.code === "ALREADY_REVIEWED" || error.code === "INVALID_PAYMENT_DATA" ? 409 : 500;
-    console.error("adminReviewPayment failed", error);
-    return jsonError(res, status, error.message || "Payment review failed");
+    if (error.code === "NOT_FOUND") return jsonError(res, 404, "Payment not found");
+    if (error.code === "ALREADY_REVIEWED") return jsonError(res, 409, "Payment already reviewed");
+    if (error.code === "INVALID_PAYMENT_DATA") return jsonError(res, 400, "Payment plan or amount is invalid");
+    console.error("adminReviewPayment failed", error); return jsonError(res, 500, "Could not review payment");
   }
 });
-
-exports.health = onRequest((req, res) => { cors(req, res); return res.json({ ok: true, service: "JORON Matrimony", plans: PLAN_PRICES }); });
