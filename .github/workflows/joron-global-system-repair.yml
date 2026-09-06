@@ -1,0 +1,54 @@
+name: JORON Global System Repair
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repair language engine compatibility
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/joron-language.js')
+          s=p.read_text(encoding='utf-8')
+          old="SUPPORTED=['bn','en','hi']"
+          new="SUPPORTED=['bn','en','hi','ur','ne','si','ar','fr','de','it','es','pt','ja','zh','ko','tr','ru','id','ms','th','vi','nl','sv','no','da','fi','el','he']"
+          if old in s:
+              s=s.replace(old,new,1)
+              p.write_text(s,encoding='utf-8')
+          p=Path('assets/joron-country-language.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("if(window.JORONLanguage?.setLanguage){try{window.JORONLanguage.setLanguage(l)}catch(e){}}","",1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate core files
+        run: |
+          test -s assets/firebase-client.js
+          test -s assets/joron-language.js
+          test -s assets/joron-country-language.js
+          test -s firestore.rules
+          test -s international-matching.html
+          python - <<'PY'
+          from pathlib import Path
+          html=list(Path('.').glob('*.html'))
+          missing=[]
+          for p in html:
+              s=p.read_text(encoding='utf-8',errors='ignore')
+              if 'assets/joron-country-language.js' not in s:
+                  missing.append(str(p))
+          if missing:
+              raise SystemExit('Missing country-language integration: '+', '.join(missing))
+          print(f'Validated {len(html)} root HTML pages')
+          PY
+      - name: Commit repair
+        run: |
+          git config user.name 'JORON System Repair'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/joron-language.js assets/joron-country-language.js
+          git diff --cached --quiet || git commit -m 'fix: complete global country-language runtime compatibility'
+          git push
