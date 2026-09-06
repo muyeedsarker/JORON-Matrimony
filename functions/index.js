@@ -15,7 +15,7 @@ initializeApp();
 const db = getFirestore();
 const auth = getAuth();
 const ADMIN_UID = "PcDehBv4dYezeIPA6h0Peo9lpih2";
-const PLAN_PRICES = { Basic: 99, Standard: 199, Premium: 399, "Premium Plus": 599 };
+const PLAN_PRICES = Object.freeze({ Basic: 700, Standard: 1500, Premium: 3500 });
 const RP_NAME = "JORON Matrimony — জোড়ন";
 const RP_ID = "joron-d7742.web.app";
 const ORIGIN = "https://joron-d7742.web.app";
@@ -82,21 +82,22 @@ exports.adminReviewPayment = onRequest(async (req, res) => {
       if (payment.paymentStatus !== "pending") { const error = new Error("Payment already reviewed"); error.code = "ALREADY_REVIEWED"; throw error; }
       const expectedPrice = PLAN_PRICES[payment.selectedPlan];
       if (!expectedPrice || Number(payment.membershipPrice) !== expectedPrice) { const error = new Error("Invalid payment plan or amount"); error.code = "INVALID_PAYMENT_DATA"; throw error; }
-      const reviewedAt = FieldValue.serverTimestamp();
+      const now = FieldValue.serverTimestamp();
       if (action === "approve") {
-        tx.update(paymentRef, { paymentStatus: "approved", membershipStatus: "active", reviewedAt, reviewedBy: admin.uid });
-        tx.set(userRef, { membershipPlan: payment.selectedPlan, paymentStatus: "paid", membershipStatus: "active", updatedAt: reviewedAt }, { merge: true });
+        tx.set(userRef, { membershipPlan: payment.selectedPlan, membershipDisplayName: payment.membershipDisplayName || payment.selectedPlan, membershipPrice: expectedPrice, membershipStatus: "active", paymentStatus: "verified", membershipActivatedAt: now, paymentVerifiedAt: now, paymentVerifiedBy: ADMIN_UID }, { merge: true });
+        tx.set(paymentRef, { paymentStatus: "verified", membershipStatus: "active", verifiedAt: now, verifiedBy: ADMIN_UID, verifiedAmount: expectedPrice }, { merge: true });
       } else {
-        tx.update(paymentRef, { paymentStatus: "rejected", reviewedAt, reviewedBy: admin.uid });
-        tx.set(userRef, { paymentStatus: "rejected", membershipStatus: "pending", updatedAt: reviewedAt }, { merge: true });
+        tx.set(userRef, { membershipStatus: "rejected", paymentStatus: "rejected", membershipRejectedAt: now, paymentRejectedBy: ADMIN_UID }, { merge: true });
+        tx.set(paymentRef, { paymentStatus: "rejected", membershipStatus: "rejected", rejectedAt: now, rejectedBy: ADMIN_UID }, { merge: true });
       }
-      return { uid, action };
+      return { selectedPlan: payment.selectedPlan, expectedPrice };
     });
-    return res.json({ ok: true, ...result });
+    return res.json({ ok: true, action, ...result });
   } catch (error) {
-    if (error.code === "NOT_FOUND") return jsonError(res, 404, "Payment not found");
-    if (error.code === "ALREADY_REVIEWED") return jsonError(res, 409, "Payment already reviewed");
-    if (error.code === "INVALID_PAYMENT_DATA") return jsonError(res, 400, "Payment plan or amount is invalid");
-    console.error("adminReviewPayment failed", error); return jsonError(res, 500, "Could not review payment");
+    const status = error.code === "NOT_FOUND" ? 404 : error.code === "ALREADY_REVIEWED" || error.code === "INVALID_PAYMENT_DATA" ? 409 : 500;
+    console.error("adminReviewPayment failed", error);
+    return jsonError(res, status, error.message || "Payment review failed");
   }
 });
+
+exports.health = onRequest((req, res) => { cors(req, res); return res.json({ ok: true, service: "JORON Matrimony", plans: PLAN_PRICES }); });
