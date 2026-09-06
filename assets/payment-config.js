@@ -22,6 +22,7 @@
   function price(countryCode,plan){const c=country(countryCode),t=TIERS[c.tier]||TIERS.other;return Number((t.membership||{})[plan]??0);}
   function registrationFee(countryCode){const c=country(countryCode),t=TIERS[c.tier]||TIERS.other;return Number(t.registration||0);}
   function expatriateRegistrationFee(countryCode,incomeBand){const base=registrationFee(countryCode),band=EXPAT_INCOME_BANDS[incomeBand];return band?Number((base*band.multiplier).toFixed(2)):base;}
+  function registrationQuote(countryCode,residencyType,incomeBand){const c=country(countryCode);const expat=residencyType==='expat-bangladeshi';const amount=expat?expatriateRegistrationFee(countryCode,incomeBand):registrationFee(countryCode);return {country:c.name,countryCode:String(countryCode||'BD').toUpperCase(),currency:c.currency,symbol:c.symbol,tier:c.tier,amount:Number(amount),residencyType:residencyType||'bangladeshi',incomeBand:expat?(incomeBand||null):null,language:c.localLanguage,demo:DEMO.enabled};}
   function quote(countryCode,plan){const c=country(countryCode);return {country:c.name,countryCode:String(countryCode||'BD').toUpperCase(),currency:c.currency,symbol:c.symbol,tier:c.tier,plan,amount:price(countryCode,plan),registrationFee:registrationFee(countryCode),language:c.localLanguage};}
-  window.JORONPayment={countries:C,tiers:TIERS,expatIncomeBands:EXPAT_INCOME_BANDS,demo:DEMO,country,price,registrationFee,expatriateRegistrationFee,quote};
+  window.JORONPayment={countries:C,tiers:TIERS,expatIncomeBands:EXPAT_INCOME_BANDS,demo:DEMO,country,price,registrationFee,expatriateRegistrationFee,registrationQuote,quote};
 })();
