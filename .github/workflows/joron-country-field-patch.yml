@@ -1,0 +1,44 @@
+name: JORON Country Field Patch
+
+on:
+  push:
+    paths:
+      - '.github/workflows/joron-country-field-patch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Smart Biodata country field
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('smart-biodata.html')
+          s = p.read_text(encoding='utf-8')
+          old = '<div class="field"><label>জাতীয়তা<input id="nationality" value="বাংলাদেশি"></label></div>'
+          new = '''<div class="field"><label>কোন দেশে? *<select id="country" required><option value="">দেশ নির্বাচন করুন</option><option value="বাংলাদেশ">🇧🇩 বাংলাদেশ</option><option value="ভারত">🇮🇳 ভারত</option><option value="পাকিস্তান">🇵🇰 পাকিস্তান</option><option value="সৌদি আরব">🇸🇦 সৌদি আরব</option><option value="সংযুক্ত আরব আমিরাত">🇦🇪 সংযুক্ত আরব আমিরাত</option><option value="কাতার">🇶🇦 কাতার</option><option value="কুয়েত">🇰🇼 কুয়েত</option><option value="ওমান">🇴🇲 ওমান</option><option value="যুক্তরাজ্য">🇬🇧 যুক্তরাজ্য</option><option value="যুক্তরাষ্ট্র">🇺🇸 যুক্তরাষ্ট্র</option><option value="কানাডা">🇨🇦 কানাডা</option><option value="অস্ট্রেলিয়া">🇦🇺 অস্ট্রেলিয়া</option><option value="মালয়েশিয়া">🇲🇾 মালয়েশিয়া</option><option value="সিঙ্গাপুর">🇸🇬 সিঙ্গাপুর</option><option value="ইতালি">🇮🇹 ইতালি</option><option value="জার্মানি">🇩🇪 জার্মানি</option><option value="ফ্রান্স">🇫🇷 ফ্রান্স</option><option value="অন্যান্য">🌍 অন্যান্য</option></select></label></div><div class="field"><label>জাতীয়তা<input id="nationality" value="বাংলাদেশি"></label></div>'''
+          if old not in s:
+              print('Country field already patched or source changed; no replacement needed.')
+          else:
+              p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add smart-biodata.html
+          git diff --cached --quiet || git commit -m 'feat: add country selection to Smart Biodata'
+          git push
+      - name: Remove one-time patch workflow
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -f .github/workflows/joron-country-field-patch.yml
+          git add .github/workflows/joron-country-field-patch.yml
+          git diff --cached --quiet || git commit -m 'chore: remove one-time country patch workflow'
+          git push || true
