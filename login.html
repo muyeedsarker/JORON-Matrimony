@@ -33,21 +33,19 @@
 </div></section></main>
 <script src="assets/joron-language.js"></script>
 <script type="module">
-import{auth,persistenceReady,signInWithCustomToken,GoogleAuthProvider,FacebookAuthProvider,signInWithPopup,signInWithRedirect,getRedirectResult,ensureUserProfile}from'./assets/firebase-client.js';
+import{auth,persistenceReady,signInWithCustomToken,ensureUserProfile}from'./assets/firebase-client.js';
+import{GoogleAuthProvider,FacebookAuthProvider,signInWithRedirect,getRedirectResult}from'https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js';
 const $=id=>document.getElementById(id),msg=$('msg'),form=$('emailForm');
 const googleProvider=new GoogleAuthProvider(),facebookProvider=new FacebookAuthProvider();
-googleProvider.setCustomParameters({prompt:'select_account'});
-facebookProvider.setCustomParameters({display:'popup'});
+googleProvider.setCustomParameters({prompt:'select_account'});facebookProvider.setCustomParameters({display:'popup'});
 const params=new URLSearchParams(location.search),rawNext=params.get('next');
 const next=rawNext&&/^(?!\/\/)(?![a-z][a-z0-9+.-]*:)[^\\\s]*$/i.test(rawNext)&&!rawNext.startsWith('//')&&!rawNext.includes('..')?rawNext:null;
-const setMsg=t=>{msg.textContent=t};
-const go=()=>location.replace(next||'biodata.html');
+const setMsg=t=>{msg.textContent=t},go=()=>location.replace(next||'biodata.html');
 const friendly=e=>{const c=e?.code||e?.message||'';const map={'auth/invalid-credential':'Member ID/মোবাইল/ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।','auth/popup-closed-by-user':'লগইন উইন্ডো বন্ধ করা হয়েছে।','auth/popup-blocked':'ব্রাউজার popup বন্ধ করেছে।','auth/unauthorized-domain':'এই ওয়েবসাইটের domain Firebase Authentication-এ অনুমোদিত নয়। Firebase Console থেকে domain অনুমোদন করতে হবে।','auth/operation-not-allowed':'Firebase Console-এ এই Login Provider চালু করা হয়নি।','auth/account-exists-with-different-credential':'এই ইমেইলে অন্য একটি Login method-এর অ্যাকাউন্ট আছে।','auth/network-request-failed':'ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।','AUTH_SERVICE_UNAVAILABLE':'নিরাপদ লগইন সেবা এখন সাময়িকভাবে পাওয়া যাচ্ছে না।'};return map[c]||'লগইন সম্পন্ন করা যায়নি। আবার চেষ্টা করুন।'};
 async function postJson(url,body){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d?.error||'AUTH_SERVICE_UNAVAILABLE');return d}
 async function oauthRedirect(provider,label){try{await persistenceReady;setMsg('⏳ '+label+' দিয়ে নিরাপদে লগইন হচ্ছে...');await signInWithRedirect(auth,provider)}catch(e){console.error(e);setMsg('❌ '+friendly(e))}}
 async function finishRedirect(){try{await persistenceReady;const r=await getRedirectResult(auth);if(!r?.user)return;const provider=r.credential?.providerId||r.user.providerData?.[0]?.providerId||'oauth';await ensureUserProfile(r.user,provider);setMsg('✅ লগইন সফল হচ্ছে...');setTimeout(go,300)}catch(e){console.error('JORON OAuth redirect error:',e);setMsg('❌ '+friendly(e))}}
-$('facebookBtn').onclick=()=>oauthRedirect(facebookProvider,'Facebook');
-$('googleBtn').onclick=()=>oauthRedirect(googleProvider,'Google');
+$('facebookBtn').onclick=()=>oauthRedirect(facebookProvider,'Facebook');$('googleBtn').onclick=()=>oauthRedirect(googleProvider,'Google');
 $('otpLoginBtn').onclick=()=>location.href='otp-login.html'+(next?'?next='+encodeURIComponent(next):'');
 $('idLoginBtn').onclick=()=>{form.style.display=form.style.display==='block'?'none':'block';if(form.style.display==='block')$('email').focus()};
 form.addEventListener('submit',async e=>{e.preventDefault();const identifier=$('email').value.trim(),password=$('password').value;if(!identifier||!password)return setMsg('Member ID, মোবাইল/ইমেইল এবং পাসওয়ার্ড দিন');try{setMsg('⏳ নিরাপদে লগইন হচ্ছে...');await persistenceReady;const d=await postJson('https://us-central1-joron-d7742.cloudfunctions.net/loginWithIdentifier',{identifier,password});if(!d.customToken)throw new Error('AUTH_SERVICE_UNAVAILABLE');await signInWithCustomToken(auth,d.customToken);setMsg('✅ লগইন সফল হচ্ছে...');setTimeout(go,400)}catch(e){console.error(e);setMsg('❌ '+friendly(e))}});
