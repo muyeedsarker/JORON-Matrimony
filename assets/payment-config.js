@@ -1,0 +1,56 @@
+/* JORON Central Payment Configuration — prepared for live gateway integration */
+(function(){
+  'use strict';
+  const TIERS={
+    lower:{registration:49,membership:{Basic:99,Standard:199,Premium:399,'Premium Plus':599}},
+    middle:{registration:99,membership:{Basic:199,Standard:399,Premium:799,'Premium Plus':1199}},
+    high:{registration:9.99,membership:{Basic:9.99,Standard:19.99,Premium:39.99,'Premium Plus':59.99}},
+    other:{registration:9.99,membership:{Basic:9.99,Standard:19.99,Premium:39.99,'Premium Plus':59.99}}
+  };
+  const C={
+    BD:{name:'বাংলাদেশ',flag:'🇧🇩',currency:'BDT',symbol:'৳',tier:'lower',localLanguage:'bn'},
+    IN:{name:'India',flag:'🇮🇳',currency:'INR',symbol:'₹',tier:'middle',localLanguage:'hi'},
+    PK:{name:'Pakistan',flag:'🇵🇰',currency:'PKR',symbol:'₨',tier:'lower',localLanguage:'ur'},
+    NP:{name:'Nepal',flag:'🇳🇵',currency:'NPR',symbol:'रु',tier:'lower',localLanguage:'ne'},
+    LK:{name:'Sri Lanka',flag:'🇱🇰',currency:'LKR',symbol:'Rs',tier:'lower',localLanguage:'si'},
+    ID:{name:'Indonesia',flag:'🇮🇩',currency:'IDR',symbol:'Rp',tier:'middle',localLanguage:'id'},
+    MY:{name:'Malaysia',flag:'🇲🇾',currency:'MYR',symbol:'RM',tier:'middle',localLanguage:'ms'},
+    TH:{name:'Thailand',flag:'🇹🇭',currency:'THB',symbol:'฿',tier:'middle',localLanguage:'th'},
+    VN:{name:'Vietnam',flag:'🇻🇳',currency:'VND',symbol:'₫',tier:'middle',localLanguage:'vi'},
+    SA:{name:'Saudi Arabia',flag:'🇸🇦',currency:'SAR',symbol:'﷼',tier:'high',localLanguage:'ar'},
+    AE:{name:'United Arab Emirates',flag:'🇦🇪',currency:'AED',symbol:'د.إ',tier:'high',localLanguage:'ar'},
+    QA:{name:'Qatar',flag:'🇶🇦',currency:'QAR',symbol:'﷼',tier:'high',localLanguage:'ar'},
+    KW:{name:'Kuwait',flag:'🇰🇼',currency:'KWD',symbol:'د.ك',tier:'high',localLanguage:'ar'},
+    OM:{name:'Oman',flag:'🇴🇲',currency:'OMR',symbol:'﷼',tier:'high',localLanguage:'ar'},
+    GB:{name:'United Kingdom',flag:'🇬🇧',currency:'GBP',symbol:'£',tier:'high',localLanguage:'en'},
+    US:{name:'United States',flag:'🇺🇸',currency:'USD',symbol:'$',tier:'high',localLanguage:'en'},
+    CA:{name:'Canada',flag:'🇨🇦',currency:'CAD',symbol:'C$',tier:'high',localLanguage:'en'},
+    AU:{name:'Australia',flag:'🇦🇺',currency:'AUD',symbol:'A$',tier:'high',localLanguage:'en'},
+    FR:{name:'France',flag:'🇫🇷',currency:'EUR',symbol:'€',tier:'high',localLanguage:'fr'},
+    DE:{name:'Germany',flag:'🇩🇪',currency:'EUR',symbol:'€',tier:'high',localLanguage:'de'},
+    IT:{name:'Italy',flag:'🇮🇹',currency:'EUR',symbol:'€',tier:'high',localLanguage:'it'},
+    ES:{name:'Spain',flag:'🇪🇸',currency:'EUR',symbol:'€',tier:'high',localLanguage:'es'},
+    PT:{name:'Portugal',flag:'🇵🇹',currency:'EUR',symbol:'€',tier:'high',localLanguage:'pt'},
+    NL:{name:'Netherlands',flag:'🇳🇱',currency:'EUR',symbol:'€',tier:'high',localLanguage:'nl'},
+    BE:{name:'Belgium',flag:'🇧🇪',currency:'EUR',symbol:'€',tier:'high',localLanguage:'nl'},
+    IE:{name:'Ireland',flag:'🇮🇪',currency:'EUR',symbol:'€',tier:'high',localLanguage:'en'},
+    JP:{name:'Japan',flag:'🇯🇵',currency:'JPY',symbol:'¥',tier:'high',localLanguage:'ja'},
+    CN:{name:'China',flag:'🇨🇳',currency:'CNY',symbol:'¥',tier:'middle',localLanguage:'zh'},
+    KR:{name:'South Korea',flag:'🇰🇷',currency:'KRW',symbol:'₩',tier:'high',localLanguage:'ko'},
+    TR:{name:'Turkey',flag:'🇹🇷',currency:'TRY',symbol:'₺',tier:'middle',localLanguage:'tr'},
+    RU:{name:'Russia',flag:'🇷🇺',currency:'RUB',symbol:'₽',tier:'middle',localLanguage:'ru'},
+    GR:{name:'Greece',flag:'🇬🇷',currency:'EUR',symbol:'€',tier:'high',localLanguage:'el'},
+    IL:{name:'Israel',flag:'🇮🇱',currency:'ILS',symbol:'₪',tier:'high',localLanguage:'he'},
+    SG:{name:'Singapore',flag:'🇸🇬',currency:'SGD',symbol:'S$',tier:'high',localLanguage:'en'},
+    SE:{name:'Sweden',flag:'🇸🇪',currency:'SEK',symbol:'kr',tier:'high',localLanguage:'sv'},
+    NO:{name:'Norway',flag:'🇳🇴',currency:'NOK',symbol:'kr',tier:'high',localLanguage:'no'},
+    DK:{name:'Denmark',flag:'🇩🇰',currency:'DKK',symbol:'kr',tier:'high',localLanguage:'da'},
+    FI:{name:'Finland',flag:'🇫🇮',currency:'EUR',symbol:'€',tier:'high',localLanguage:'fi'}
+  };
+  const DEMO={enabled:true,label:'Demo / Gateway not connected'};
+  function country(code){return C[String(code||'BD').toUpperCase()]||{name:'Other',flag:'🌍',currency:'USD',symbol:'$',tier:'other',localLanguage:'en'};}
+  function price(countryCode,plan){const c=country(countryCode),t=TIERS[c.tier]||TIERS.other;return Number((t.membership||{})[plan]??0);}
+  function registrationFee(countryCode){const c=country(countryCode),t=TIERS[c.tier]||TIERS.other;return Number(t.registration||0);}
+  function quote(countryCode,plan){const c=country(countryCode);return {country:c.name,countryCode:String(countryCode||'BD').toUpperCase(),currency:c.currency,symbol:c.symbol,tier:c.tier,plan,amount:price(countryCode,plan),registrationFee:registrationFee(countryCode),language:c.localLanguage};}
+  window.JORONPayment={countries:C,tiers:TIERS,demo:DEMO,country,price,registrationFee,quote};
+})();
