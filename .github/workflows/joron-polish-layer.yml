@@ -9,20 +9,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add polish stylesheet to site pages
+      - name: Apply JORON visual and profile-search polish
         shell: python
         run: |
           from pathlib import Path
           changed=[]
           for p in Path('.').glob('*.html'):
               s=p.read_text(encoding='utf-8')
-              if 'assets/joron-polish-2026.css' in s:
-                  continue
-              marker='</head>'
-              if marker in s:
-                  s=s.replace(marker,'<link rel="stylesheet" href="assets/joron-polish-2026.css">\n</head>',1)
+              if 'assets/joron-polish-2026.css' not in s and '</head>' in s:
+                  s=s.replace('</head>','<link rel="stylesheet" href="assets/joron-polish-2026.css">\n</head>',1)
                   p.write_text(s,encoding='utf-8')
                   changed.append(str(p))
+
+          p=Path('profiles.html')
+          if p.exists():
+              s=p.read_text(encoding='utf-8')
+              original=s
+              country_ui='<div><label>দেশ</label><select id="countryFilter"><option value="">সব দেশ</option><option value="BD">বাংলাদেশ</option><option value="IN">ভারত</option><option value="PK">পাকিস্তান</option><option value="SA">সৌদি আরব</option><option value="AE">সংযুক্ত আরব আমিরাত</option><option value="GB">যুক্তরাজ্য</option><option value="US">যুক্তরাষ্ট্র</option><option value="CA">কানাডা</option><option value="AU">অস্ট্রেলিয়া</option><option value="MY">মালয়েশিয়া</option><option value="SG">সিঙ্গাপুর</option><option value="IT">ইতালি</option><option value="JP">জাপান</option><option value="OTHER">অন্যান্য</option></select></div>'
+              if 'id="countryFilter"' not in s:
+                  anchor='<div><label>জেলা</label><select id="districtFilter">'
+                  s=s.replace(anchor,country_ui+anchor,1)
+                  s=s.replace('f={g:$(\'genderFilter\').value,a:$(\'ageFilter\').value,d:$(\'districtFilter\').value', 'f={g:$(\'genderFilter\').value,a:$(\'ageFilter\').value,c:$(\'countryFilter\').value,d:$(\'districtFilter\').value',1)
+                  s=s.replace('&&(!f.g||val(d,\'gender\')===f.g)&&ageOk(d.age,f.a)&&(!f.d||val(d,\'district\')===f.d)', '&&(!f.g||val(d,\'gender\')===f.g)&&ageOk(d.age,f.a)&&(!f.c||val(d,\'country\',\'countryCode\')===f.c)&&(!f.d||val(d,\'district\')===f.d)',1)
+                  s=s.replace("['searchInput','genderFilter','ageFilter','districtFilter'", "['searchInput','genderFilter','ageFilter','countryFilter','districtFilter'",2)
+                  p.write_text(s,encoding='utf-8')
+                  changed.append('profiles.html(country-filter)')
           print('Updated:', ', '.join(changed) if changed else 'none')
       - name: Commit applied layer
         run: |
