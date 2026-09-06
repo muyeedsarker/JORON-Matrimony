@@ -3,6 +3,7 @@ name: JORON Country Language Integration
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,40 +14,38 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Add country-language selector to HTML pages
-        shell: bash
+      - name: Integrate global language runtime
         run: |
-          set -e
-          changed=0
-          while IFS= read -r -d '' file; do
-            case "$file" in
-              ./node_modules/*) continue ;;
-            esac
-            if grep -q 'assets/joron-country-language.js' "$file"; then
-              continue
-            fi
-            if grep -q '</body>' "$file"; then
-              python3 - "$file" <<'PY'
-import sys
-from pathlib import Path
-p=Path(sys.argv[1])
-s=p.read_text(encoding='utf-8')
-needle='</body>'
-tag='<script src="assets/joron-country-language.js?v=20260907-1"></script>\n'
-if 'assets/joron-country-language.js' not in s and needle in s:
-    s=s.replace(needle, tag+needle, 1)
-    p.write_text(s, encoding='utf-8')
-PY
-              changed=1
-            fi
-          done < <(find . -type f -name '*.html' -print0)
+          python3 - <<'PY'
+          from pathlib import Path
+          for p in Path('.').rglob('*.html'):
+              if any(part in {'node_modules','.git'} for part in p.parts): continue
+              s=p.read_text(encoding='utf-8',errors='ignore')
+              if '</body>' not in s: continue
+              if 'assets/joron-global-language.js' not in s:
+                  tag='<script src="assets/joron-global-language.js?v=20260907-2"></script>\n'
+                  s=s.replace('</body>',tag+'</body>',1)
+              if 'assets/joron-country-language.js' not in s:
+                  tag='<script src="assets/joron-country-language.js?v=20260907-2"></script>\n'
+                  s=s.replace('</body>',tag+'</body>',1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate JORON core integration
+        run: |
+          test -s assets/joron-global-language.js
+          test -s assets/joron-country-language.js
+          test -s assets/firebase-client.js
+          test -s firestore.rules
+          python3 - <<'PY'
+          from pathlib import Path
+          pages=[p for p in Path('.').glob('*.html') if p.is_file()]
+          bad=[str(p) for p in pages if 'assets/joron-global-language.js' not in p.read_text(encoding='utf-8',errors='ignore') or 'assets/joron-country-language.js' not in p.read_text(encoding='utf-8',errors='ignore')]
+          if bad: raise SystemExit('Language integration missing: '+', '.join(bad))
+          print(f'OK: {len(pages)} root HTML pages have global language + country selector')
+          PY
+      - name: Commit integration
+        run: |
           git config user.name 'JORON Bot'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          if [ "$changed" -eq 1 ] && git diff --quiet; then
-            echo 'No HTML changes required.'
-          elif [ "$changed" -eq 1 ]; then
-            git add '*.html'
-            git commit -m 'chore: integrate JORON country language selector'
-            git push
-          fi
+          git add -- '*.html'
+          if git diff --cached --quiet; then echo 'No HTML changes required.'; else git commit -m 'chore: integrate JORON global language runtime'; git push; fi
