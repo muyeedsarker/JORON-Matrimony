@@ -1,0 +1,57 @@
+name: JORON Profile Country Filter
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'profiles.html'
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add country filter safely
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('profiles.html')
+          s=p.read_text(encoding='utf-8')
+          changed=False
+          old='<div><label>ধর্ম</label><select id="religionFilter"><option value="">সব ধর্ম</option></select></div>'
+          new='<div><label>ধর্ম</label><select id="religionFilter"><option value="">সব ধর্ম</option></select></div><div><label>দেশ</label><select id="countryFilter"><option value="">সব দেশ</option><option value="বাংলাদেশ">🇧🇩 বাংলাদেশ</option><option value="ভারত">🇮🇳 ভারত</option><option value="পাকিস্তান">🇵🇰 পাকিস্তান</option><option value="সৌদি আরব">🇸🇦 সৌদি আরব</option><option value="সংযুক্ত আরব আমিরাত">🇦🇪 সংযুক্ত আরব আমিরাত</option><option value="কাতার">🇶🇦 কাতার</option><option value="কুয়েত">🇰🇼 কুয়েত</option><option value="ওমান">🇴🇲 ওমান</option><option value="যুক্তরাজ্য">🇬🇧 যুক্তরাজ্য</option><option value="যুক্তরাষ্ট্র">🇺🇸 যুক্তরাষ্ট্র</option><option value="কানাডা">🇨🇦 কানাডা</option><option value="অস্ট্রেলিয়া">🇦🇺 অস্ট্রেলিয়া</option><option value="মালয়েশিয়া">🇲🇾 মালয়েশিয়া</option><option value="সিঙ্গাপুর">🇸🇬 সিঙ্গাপুর</option><option value="ইতালি">🇮🇹 ইতালি</option><option value="জার্মানি">🇩🇪 জার্মানি</option><option value="ফ্রান্স">🇫🇷 ফ্রান্স</option><option value="অন্যান্য">🌍 অন্যান্য</option></select></div>'
+          if 'id="countryFilter"' not in s and old in s:
+            s=s.replace(old,new,1); changed=True
+          old2="f={g:$(\'genderFilter\').value,a:$(\'ageFilter\').value,d:$(\'districtFilter\').value,e:$(\'educationFilter\').value,p:$(\'professionFilter\').value,r:$(\'religionFilter\').value}"
+          new2="f={g:$(\'genderFilter\').value,a:$(\'ageFilter\').value,d:$(\'districtFilter\').value,e:$(\'educationFilter\').value,p:$(\'professionFilter\').value,r:$(\'religionFilter\').value,c:$(\'countryFilter\')?.value||\'\'}"
+          if 'c:$(\'countryFilter\')' not in s and old2 in s:
+            s=s.replace(old2,new2,1); changed=True
+          old3="(!f.r||val(d,'religion','religious')===f.r)"
+          new3="(!f.r||val(d,'religion','religious')===f.r)&&(!f.c||val(d,'country','countryName')===f.c)"
+          if 'val(d,\'country\',\'countryName\')' not in s and old3 in s:
+            s=s.replace(old3,new3,1); changed=True
+          old4="['searchInput','genderFilter','ageFilter','districtFilter','educationFilter','professionFilter','religionFilter'].forEach(id=>$(id).addEventListener(id==='searchInput'?'input':'change',render));"
+          new4="['searchInput','genderFilter','ageFilter','districtFilter','educationFilter','professionFilter','religionFilter','countryFilter'].forEach(id=>$(id)?.addEventListener(id==='searchInput'?'input':'change',render));"
+          if 'countryFilter'].forEach' not in s and old4 in s:
+            s=s.replace(old4,new4,1); changed=True
+          old5="['searchInput','genderFilter','ageFilter','districtFilter','educationFilter','professionFilter','religionFilter'].forEach(id=>$(id).value='');"
+          new5="['searchInput','genderFilter','ageFilter','districtFilter','educationFilter','professionFilter','religionFilter','countryFilter'].forEach(id=>$(id)?.value='');"
+          if 'countryFilter'].forEach(id=>$(id)?.value' not in s and old5 in s:
+            s=s.replace(old5,new5,1); changed=True
+          if changed:
+            p.write_text(s,encoding='utf-8')
+          print('patched=',changed)
+      - name: Commit patch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add profiles.html
+          git diff --cached --quiet || git commit -m 'feat: add country filter to profiles'
+          git push
+      - name: Remove one-time workflow
+        if: success()
+        run: |
+          git rm .github/workflows/joron-profile-country-once.yml
+          git commit -m 'chore: remove one-time profile country workflow'
+          git push
