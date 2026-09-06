@@ -1,0 +1,52 @@
+name: JORON Country Language Integration
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add country-language selector to HTML pages
+        shell: bash
+        run: |
+          set -e
+          changed=0
+          while IFS= read -r -d '' file; do
+            case "$file" in
+              ./node_modules/*) continue ;;
+            esac
+            if grep -q 'assets/joron-country-language.js' "$file"; then
+              continue
+            fi
+            if grep -q '</body>' "$file"; then
+              python3 - "$file" <<'PY'
+import sys
+from pathlib import Path
+p=Path(sys.argv[1])
+s=p.read_text(encoding='utf-8')
+needle='</body>'
+tag='<script src="assets/joron-country-language.js?v=20260907-1"></script>\n'
+if 'assets/joron-country-language.js' not in s and needle in s:
+    s=s.replace(needle, tag+needle, 1)
+    p.write_text(s, encoding='utf-8')
+PY
+              changed=1
+            fi
+          done < <(find . -type f -name '*.html' -print0)
+          git config user.name 'JORON Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if [ "$changed" -eq 1 ] && git diff --quiet; then
+            echo 'No HTML changes required.'
+          elif [ "$changed" -eq 1 ]; then
+            git add '*.html'
+            git commit -m 'chore: integrate JORON country language selector'
+            git push
+          fi
