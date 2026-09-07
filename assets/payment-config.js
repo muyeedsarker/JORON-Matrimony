@@ -26,3 +26,63 @@
   function quote(countryCode,plan){const c=country(countryCode);return {country:c.name,countryCode:String(countryCode||'BD').toUpperCase(),currency:c.currency,symbol:c.symbol,tier:c.tier,plan,amount:price(countryCode,plan),registrationFee:registrationFee(countryCode),language:c.localLanguage};}
   window.JORONPayment={countries:C,tiers:TIERS,expatIncomeBands:EXPAT_INCOME_BANDS,demo:DEMO,country,price,registrationFee,expatriateRegistrationFee,registrationQuote,quote};
 })();
+
+/* Signup opening gate: Country + Language first, then the registration form. */
+(function(){
+  'use strict';
+  function initSignupGate(){
+    const form=document.getElementById('signupForm');
+    const country=document.getElementById('country');
+    const language=document.getElementById('language');
+    if(!form||!country||!language||document.getElementById('joronSignupGate'))return;
+
+    const box=form.closest('.signup-box')||form.parentElement;
+    const locationTitle=form.querySelector('.step-title');
+    const countryLabel=form.querySelector('label[for="country"]');
+    const languageLabel=form.querySelector('label[for="language"]');
+
+    const gate=document.createElement('section');
+    gate.id='joronSignupGate';
+    gate.className='joron-signup-gate';
+    gate.innerHTML='<div class="gate-icon">🌍</div><h2>আপনার যাত্রা শুরু করুন</h2><p>প্রথমে আপনার <strong>দেশ</strong> ও <strong>পছন্দের ভাষা</strong> নির্বাচন করুন। তারপর সহজ ধাপে Registration সম্পূর্ণ করুন।</p><div class="gate-fields"></div><div id="joronGateError" class="gate-error" role="alert"></div><button type="button" id="joronGateContinue" class="primary-btn gate-continue">✨ শুরু করুন</button>';
+    box.insertBefore(gate,form);
+
+    const fields=gate.querySelector('.gate-fields');
+    if(locationTitle)fields.appendChild(locationTitle);
+    if(countryLabel)fields.appendChild(countryLabel);
+    fields.appendChild(country);
+    if(languageLabel)fields.appendChild(languageLabel);
+    fields.appendChild(language);
+
+    const oldBar=box.querySelector('.joron-country-language');
+    if(oldBar)oldBar.remove();
+
+    const style=document.createElement('style');
+    style.textContent='.joron-signup-gate{margin:8px 0 24px;padding:24px 20px;border:1px solid var(--gold-line);border-radius:22px;background:linear-gradient(145deg,#fffdf8,#fff8ea);box-shadow:0 12px 30px rgba(100,72,28,.08);text-align:center}.gate-icon{font-size:42px;line-height:1;margin-bottom:8px}.joron-signup-gate h2{margin:0;color:var(--gold-deep);font-size:25px}.joron-signup-gate>p{margin:9px auto 18px;max-width:500px;color:var(--muted);line-height:1.7;font-size:14px}.gate-fields{text-align:left}.gate-fields .step-title{margin-top:0}.gate-fields label.field-label{margin-top:13px}.gate-continue{width:100%;margin-top:16px;min-height:50px;font-size:16px}.gate-error{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;background:#fff0f0;color:#a21b1b;font-size:13px;font-weight:700}.gate-error.show{display:block}.signup-box>#signupForm{display:none}.signup-box>#signupForm.gate-open{display:block}.signup-box>#signupForm.gate-open .step-title:first-child,.signup-box>#signupForm.gate-open label[for="country"],.signup-box>#signupForm.gate-open #country,.signup-box>#signupForm.gate-open label[for="language"],.signup-box>#signupForm.gate-open #language{display:none}@media(max-width:480px){.joron-signup-gate{padding:22px 15px}.joron-signup-gate h2{font-size:22px}.joron-signup-gate>p{font-size:13px}}';
+    document.head.appendChild(style);
+
+    function fillLanguages(){
+      const map={BD:[['bn','বাংলা'],['en','English']],IN:[['hi','हिन्दी'],['en','English']],PK:[['ur','اردو'],['en','English']],NP:[['ne','नेपाली'],['en','English']],LK:[['si','සිංහල'],['en','English']],SA:[['ar','العربية'],['en','English']],AE:[['ar','العربية'],['en','English']],QA:[['ar','العربية'],['en','English']],KW:[['ar','العربية'],['en','English']],OM:[['ar','العربية'],['en','English']],GB:[['en','English']],US:[['en','English']],CA:[['en','English']],AU:[['en','English']],FR:[['fr','Français'],['en','English']],DE:[['de','Deutsch'],['en','English']],IT:[['it','Italiano'],['en','English']],ES:[['es','Español'],['en','English']],PT:[['pt','Português'],['en','English']],NL:[['nl','Nederlands'],['en','English']],IE:[['en','English']],JP:[['ja','日本語'],['en','English']],CN:[['zh','中文'],['en','English']],KR:[['ko','한국어'],['en','English']],TR:[['tr','Türkçe'],['en','English']],RU:[['ru','Русский'],['en','English']],ID:[['id','Bahasa Indonesia'],['en','English']],MY:[['ms','Bahasa Melayu'],['en','English']],TH:[['th','ไทย'],['en','English']],VN:[['vi','Tiếng Việt'],['en','English']],SG:[['en','English']],SE:[['sv','Svenska'],['en','English']],NO:[['no','Norsk'],['en','English']],DK:[['da','Dansk'],['en','English']],FI:[['fi','Suomi'],['en','English']],GR:[['el','Ελληνικά'],['en','English']],IL:[['he','עברית'],['en','English']]};
+      const list=map[country.value]||[['en','English']];
+      language.innerHTML='<option value="">ভাষা নির্বাচন করুন</option>';
+      list.forEach(([code,label])=>{const o=document.createElement('option');o.value=code;o.textContent=label;language.appendChild(o);});
+    }
+    country.value='';
+    language.innerHTML='<option value="">দেশ নির্বাচন করার পর ভাষা বেছে নিন</option>';
+    country.addEventListener('change',fillLanguages);
+
+    const err=gate.querySelector('#joronGateError');
+    gate.querySelector('#joronGateContinue').addEventListener('click',function(){
+      err.textContent='';err.classList.remove('show');
+      if(!country.value){err.textContent='অনুগ্রহ করে আপনার দেশ নির্বাচন করুন।';err.classList.add('show');country.focus();return;}
+      if(!language.value){err.textContent='অনুগ্রহ করে আপনার পছন্দের ভাষা নির্বাচন করুন।';err.classList.add('show');language.focus();return;}
+      localStorage.setItem('joronCountry',country.value);
+      localStorage.setItem('joronLanguage',language.value);
+      document.documentElement.lang=language.value;
+      gate.hidden=true;
+      form.classList.add('gate-open');
+      form.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initSignupGate,{once:true});else initSignupGate();
+})();
