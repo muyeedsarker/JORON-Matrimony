@@ -1,0 +1,38 @@
+/* JORON Smart Biodata 2026 — strict production theme */
+:root{
+  --j-purple:#534AB7;
+  --j-purple-dark:#26215C;
+  --j-purple-light:#EEEDFE;
+  --j-purple-mid:#7F77DD;
+  --j-green:#639922;
+  --j-green-dark:#27500A;
+  --j-green-light:#EAF3DE;
+  --j-green-mid:#97C459;
+  --j-text:#2C2C2A;
+  --j-muted:#5F5E5A;
+  --j-white:#FFFFFF;
+}
+body{background:var(--j-white)!important;color:var(--j-text)!important}
+.site-header{background:var(--j-white)!important;border-bottom:1px solid var(--j-purple-mid)!important}
+.brand strong,h1,h2,h3{color:var(--j-purple-dark)!important}
+.hero{background:var(--j-purple-light)!important;color:var(--j-purple-dark)!important}
+.hero p,.subtitle{color:var(--j-green-dark)!important}
+.bio-badge,.badge{background:var(--j-white)!important;color:var(--j-purple)!important;border:1px solid var(--j-purple-mid)!important}
+.card,.panel,.biodata-card,.form-card{background:var(--j-white)!important;border:1px solid var(--j-purple-mid)!important;box-shadow:0 8px 24px rgba(38,33,92,.08)!important}
+label{color:var(--j-purple-dark)!important}
+input,select,textarea{background:var(--j-white)!important;color:var(--j-text)!important;border:1px solid var(--j-purple-mid)!important}
+input:focus,select:focus,textarea:focus{border-color:var(--j-purple)!important;outline:2px solid var(--j-purple-light)!important}
+.notice,.same-address,.success,.save-status{background:var(--j-green-light)!important;color:var(--j-green-dark)!important;border-color:var(--j-green-mid)!important}
+button,.btn,.actions button,.form-actions button{background:var(--j-purple)!important;color:var(--j-white)!important;border:1px solid var(--j-purple)!important;box-shadow:none!important}
+button:hover,.btn:hover{background:var(--j-purple-dark)!important}
+.secondary,.btn-secondary{background:var(--j-white)!important;color:var(--j-green-dark)!important;border:1px solid var(--j-green-mid)!important}
+.secondary:hover,.btn-secondary:hover{background:var(--j-green-light)!important}
+footer{background:var(--j-white)!important;border-top:1px solid var(--j-purple-mid)!important;color:var(--j-muted)!important}
+/* Country and language belong only to the first registration/onboarding page. */
+.country-select,.language-select,#country,#language,#countrySelect,#languageSelect,[name="country"],[name="language"]{display:none!important}
+@media(max-width:700px){
+  .hero{padding:28px 16px!important}
+  .card,.panel,.biodata-card,.form-card{border-radius:14px!important}
+  .actions,.form-actions{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+  button,.btn,.actions button,.form-actions button{min-height:40px!important;padding:9px 14px!important}
+}
