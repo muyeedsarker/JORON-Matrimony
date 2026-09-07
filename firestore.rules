@@ -4,58 +4,24 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function own(uid) { return signedIn() && request.auth.uid == uid; }
     function mutual(a,b) { return signedIn() && a != b && get(/databases/$(database)/documents/interests/$(a + '_' + b)).data.status == 'accepted' && get(/databases/$(database)/documents/interests/$(b + '_' + a)).data.status == 'accepted'; }
-    function validPlanPrice() {
-      return (request.resource.data.membershipPlan == 'Basic' && request.resource.data.membershipPrice == 700) ||
-             (request.resource.data.membershipPlan == 'Standard' && request.resource.data.membershipPrice == 1500) ||
-             (request.resource.data.membershipPlan == 'Premium' && request.resource.data.membershipPrice == 3500);
-    }
-    function validPaymentCreate() {
-      return request.resource.data.uid == request.auth.uid &&
-        request.resource.data.paymentStatus == 'pending' &&
-        request.resource.data.membershipStatus == 'pending' &&
-        request.resource.data.membershipPlan in ['Basic','Standard','Premium'] &&
-        validPlanPrice();
-    }
+    function validPlanPrice() { return (request.resource.data.membershipPlan == 'Basic' && request.resource.data.membershipPrice == 700) || (request.resource.data.membershipPlan == 'Standard' && request.resource.data.membershipPrice == 1500) || (request.resource.data.membershipPlan == 'Premium' && request.resource.data.membershipPrice == 3500); }
+    function validPaymentCreate() { return request.resource.data.uid == request.auth.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending' && request.resource.data.membershipPlan in ['Basic','Standard','Premium'] && validPlanPrice(); }
     function publicBiodataKeys() { return ['uid','name','nickname','dob','age','gender','height','blood','marital','nationality','language','religion','practice','division','district','upazila','postOffice','postalCode','area','education','eduHighest','eduDegree','eduInstitution','eduSubject','eduYear','eduResult','profession','professionType','workplace','designation','experience','currentlyEmployed','familyType','childCount','personality','about','prefAge','prefDistrict','top3','visibility','profileCompleted','updatedAt']; }
     function publicProfileKeys() { return ['uid','name','nickname','age','gender','height','marital','division','district','upazila','postOffice','postalCode','religion','eduSystem','education','eduHighest','eduDegree','eduInstitution','eduSubject','eduYear','eduResult','profession','professionType','workplace','designation','experience','currentlyEmployed','familyType','childCount','personality','about','prefAge','prefDistrict','top3','photoUrl','visibility','educationSystem','institution','subject','passingYear','result','partner','profileCompleted','updatedAt']; }
     function validPublicProfile() { return request.resource.data.uid == request.auth.uid && request.resource.data.keys().hasOnly(publicBiodataKeys()); }
     function validPublicProfileView() { return request.resource.data.uid == request.auth.uid && request.resource.data.keys().hasOnly(publicProfileKeys()); }
-    match /biodata/{userId} {
-      allow read: if signedIn() && resource.data.visibility == 'public';
-      allow create, update: if own(userId) && validPublicProfile();
-      allow delete: if own(userId);
-    }
+    function validTicketCreate() { return signedIn() && request.resource.data.uid == request.auth.uid && request.resource.data.status == 'open' && request.resource.data.source in ['web','ai'] && request.resource.data.category in ['account','profile','biodata','matching','membership','payment','privacy','safety','technical','other'] && request.resource.data.priority in ['low','normal','high','urgent']; }
+    match /biodata/{userId} { allow read: if signedIn() && resource.data.visibility == 'public'; allow create, update: if own(userId) && validPublicProfile(); allow delete: if own(userId); }
     match /privateBiodata/{userId} { allow read, create, update, delete: if own(userId); }
     match /publicProfiles/{userId} { allow read: if signedIn() && resource.data.visibility == 'public'; allow create, update: if own(userId) && validPublicProfileView(); allow delete: if own(userId); }
-    match /interests/{interestId} {
-      allow create: if signedIn() && request.resource.data.fromUserId == request.auth.uid && request.resource.data.profileId != request.auth.uid && request.resource.data.status == 'pending';
-      allow read: if signedIn() && (resource.data.fromUserId == request.auth.uid || resource.data.profileId == request.auth.uid);
-      allow update: if signedIn() && resource.data.profileId == request.auth.uid && request.resource.data.fromUserId == resource.data.fromUserId && request.resource.data.profileId == resource.data.profileId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']) && request.resource.data.status in ['pending','accepted','rejected'];
-      allow delete: if signedIn() && resource.data.fromUserId == request.auth.uid;
-    }
-    match /users/{userId} {
-      allow read: if own(userId);
-      allow create: if own(userId) && (!request.resource.data.keys().hasAny(['membershipStatus','membershipPlan','membershipPrice','paymentStatus']) || (request.resource.data.membershipStatus == 'pending' && request.resource.data.paymentStatus == 'pending' && validPlanPrice()));
-      allow update: if own(userId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipRequestedAt']) ||
-                    own(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['admin','isAdmin','membershipPlan','membershipPrice','membershipStatus','paymentStatus']);
-      allow delete: if own(userId);
-    }
-    match /payments/{userId} {
-      allow read: if own(userId);
-      allow create: if own(userId) && validPaymentCreate();
-      allow update: if own(userId) && request.resource.data.uid == resource.data.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending' && request.resource.data.membershipPlan == resource.data.membershipPlan && request.resource.data.membershipPrice == resource.data.membershipPrice && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['senderNumber','transactionId','updatedAt']);
-      allow delete: if own(userId);
-    }
+    match /interests/{interestId} { allow create: if signedIn() && request.resource.data.fromUserId == request.auth.uid && request.resource.data.profileId != request.auth.uid && request.resource.data.status == 'pending'; allow read: if signedIn() && (resource.data.fromUserId == request.auth.uid || resource.data.profileId == request.auth.uid); allow update: if signedIn() && resource.data.profileId == request.auth.uid && request.resource.data.fromUserId == resource.data.fromUserId && request.resource.data.profileId == resource.data.profileId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','updatedAt']) && request.resource.data.status in ['pending','accepted','rejected']; allow delete: if signedIn() && resource.data.fromUserId == request.auth.uid; }
+    match /users/{userId} { allow read: if own(userId); allow create: if own(userId) && (!request.resource.data.keys().hasAny(['membershipStatus','membershipPlan','membershipPrice','paymentStatus']) || (request.resource.data.membershipStatus == 'pending' && request.resource.data.paymentStatus == 'pending' && validPlanPrice())); allow update: if own(userId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipRequestedAt']) || own(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['admin','isAdmin','membershipPlan','membershipPrice','membershipStatus','paymentStatus']); allow delete: if own(userId); }
+    match /payments/{userId} { allow read: if own(userId); allow create: if own(userId) && validPaymentCreate(); allow update: if own(userId) && request.resource.data.uid == resource.data.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending' && request.resource.data.membershipPlan == resource.data.membershipPlan && request.resource.data.membershipPrice == resource.data.membershipPrice && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['senderNumber','transactionId','updatedAt']); allow delete: if own(userId); }
+    match /supportTickets/{ticketId} { allow create: if validTicketCreate(); allow read: if signedIn() && resource.data.uid == request.auth.uid; allow update: if signedIn() && resource.data.uid == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['message','subject','category','priority','updatedAt']); allow delete: if signedIn() && resource.data.uid == request.auth.uid; }
+    match /supportMessages/{messageId} { allow create: if signedIn() && request.resource.data.senderType == 'customer' && request.resource.data.senderUid == request.auth.uid && exists(/databases/$(database)/documents/supportTickets/$(request.resource.data.ticketId)) && get(/databases/$(database)/documents/supportTickets/$(request.resource.data.ticketId)).data.uid == request.auth.uid; allow read: if signedIn() && exists(/databases/$(database)/documents/supportTickets/$(resource.data.ticketId)) && get(/databases/$(database)/documents/supportTickets/$(resource.data.ticketId)).data.uid == request.auth.uid; allow update, delete: if false; }
+    match /supportArticles/{articleId} { allow read: if true; allow write: if false; }
     match /loginOtps/{docId} { allow read, write: if false; }
-    match /chats/{chatId} {
-      allow create: if signedIn() && request.resource.data.participants is list && request.resource.data.participants.size() == 2 && request.auth.uid in request.resource.data.participants && mutual(request.resource.data.participants[0],request.resource.data.participants[1]);
-      allow read, update: if signedIn() && resource.data.participants is list && request.auth.uid in resource.data.participants && mutual(resource.data.participants[0],resource.data.participants[1]);
-      match /messages/{messageId} {
-        allow read: if signedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.participants is list && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants && mutual(get(/databases/$(database)/documents/chats/$(chatId)).data.participants[0],get(/databases/$(database)/documents/chats/$(chatId)).data.participants[1]);
-        allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants && mutual(get(/databases/$(database)/documents/chats/$(chatId)).data.participants[0],get(/databases/$(database)/documents/chats/$(chatId)).data.participants[1]);
-        allow update, delete: if signedIn() && resource.data.senderId == request.auth.uid && request.auth.uid in resource.data.participants && mutual(resource.data.participants[0],resource.data.participants[1]);
-      }
-    }
+    match /chats/{chatId} { allow create: if signedIn() && request.resource.data.participants is list && request.resource.data.participants.size() == 2 && request.auth.uid in request.resource.data.participants && mutual(request.resource.data.participants[0],request.resource.data.participants[1]); allow read, update: if signedIn() && resource.data.participants is list && request.auth.uid in resource.data.participants && mutual(resource.data.participants[0],resource.data.participants[1]); match /messages/{messageId} { allow read: if signedIn() && get(/databases/$(database)/documents/chats/$(chatId)).data.participants is list && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants && mutual(get(/databases/$(database)/documents/chats/$(chatId)).data.participants[0],get(/databases/$(database)/documents/chats/$(chatId)).data.participants[1]); allow create: if signedIn() && request.resource.data.senderId == request.auth.uid && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants && mutual(get(/databases/$(database)/documents/chats/$(chatId)).data.participants[0],get(/databases/$(database)/documents/chats/$(chatId)).data.participants[1]); allow update, delete: if signedIn() && resource.data.senderId == request.auth.uid && request.auth.uid in resource.data.participants && mutual(resource.data.participants[0],resource.data.participants[1]); } }
     match /blocks/{blockId} { allow create: if signedIn() && request.resource.data.blockerId == request.auth.uid && request.resource.data.blockedId != request.auth.uid; allow read, delete: if signedIn() && resource.data.blockerId == request.auth.uid; }
     match /reports/{reportId} { allow create: if signedIn() && request.resource.data.reporterId == request.auth.uid && request.resource.data.reportedId != request.auth.uid && request.resource.data.status == 'pending'; allow read: if signedIn() && resource.data.reporterId == request.auth.uid; }
     match /verificationRequests/{userId} { allow read, create, update, delete: if own(userId); }
