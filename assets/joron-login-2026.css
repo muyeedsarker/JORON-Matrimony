@@ -1,0 +1,27 @@
+/* JORON Login — strict Purple + Emerald + White production layer */
+html,body{background:#EEEDFE!important;color:#2C2C2A!important}
+.login-page{background:#EEEDFE!important}
+.login-shell{background:#fff!important;box-shadow:0 18px 55px rgba(38,33,92,.14)!important;border:1px solid rgba(127,119,221,.28)}
+.hero{background:#EEEDFE!important}
+.hero img{filter:none!important}
+.login-panel{background:#fff!important;border-top:1px solid #EEEDFE!important}
+.welcome{color:#26215C!important}
+.msg{color:#27500A!important}
+.btn{box-shadow:0 6px 16px rgba(38,33,92,.10)!important;border-radius:12px!important}
+.btn.fb,.btn.google,.btn.idbtn,.btn.otpbtn{color:#fff!important;border-color:transparent!important}
+.btn.fb{background:#534AB7!important}
+.btn.google{background:#EEEDFE!important;color:#26215C!important;border:1px solid #7F77DD!important}
+.btn.idbtn{background:#534AB7!important}
+.btn.otpbtn{background:#639922!important}
+.divider{color:#5F5E5A!important}.divider:before,.divider:after{background:#7F77DD!important}
+.terms{color:#5F5E5A!important}.terms a{color:#534AB7!important}
+.homeback a{color:#534AB7!important;font-weight:800}
+.email-form{background:#EEEDFE!important;border:1px solid #7F77DD!important}
+.email-form label{color:#26215C!important}
+.email-form input{border:1px solid #7F77DD!important;color:#2C2C2A!important;background:#fff!important}
+.email-form .idbtn{background:#534AB7!important}
+.email-form .google{background:#fff!important;color:#26215C!important}
+@media(max-width:600px){.login-shell{border:0!important;box-shadow:none!important}.hero{min-height:220px}}
+/* No legacy theme colors should survive on this page. */
+body,.login-shell,.login-panel,.hero{background-image:none!important}
+.switch,.toggle,[role=switch],.toggle-button,.switch-button,.switch-control{display:none!important}
