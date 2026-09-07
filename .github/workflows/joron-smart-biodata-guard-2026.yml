@@ -1,0 +1,58 @@
+name: JORON Smart Biodata Guard 2026
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Ensure Smart Biodata production field and theme
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('smart-biodata.html')
+          s = p.read_text(encoding='utf-8')
+          original = s
+
+          if 'id="currentlyEmployed"' not in s and "id='currentlyEmployed'" not in s:
+              marker = '<form id="form">'
+              field = '<input id="currentlyEmployed" name="currentlyEmployed" type="hidden" value="">'
+              if marker in s:
+                  s = s.replace(marker, marker + field, 1)
+              else:
+                  s = s.replace('<body>', '<body>' + field, 1)
+
+          theme = '<link rel="stylesheet" href="assets/joron-smart-biodata-2026.css?v=2026">'
+          if theme not in s and '</head>' in s:
+              s = s.replace('</head>', theme + '</head>', 1)
+
+          if s != original:
+              p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate Smart Biodata
+        run: node scripts/validate-smart-biodata.mjs
+
+      - name: Commit guard changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No Smart Biodata guard changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add smart-biodata.html
+          git commit -m "fix: align smart biodata production fields"
+          git push
