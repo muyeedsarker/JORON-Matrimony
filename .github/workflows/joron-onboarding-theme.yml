@@ -5,6 +5,7 @@ on:
     paths:
       - 'onboarding-v4.html'
       - 'assets/joron-onboarding-2026.css'
+      - 'assets/joron-onboarding-auth.js'
       - '.github/workflows/joron-onboarding-theme.yml'
   workflow_dispatch:
 permissions:
@@ -14,25 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply onboarding production theme
+      - name: Apply onboarding production theme and auth bridge
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('onboarding-v4.html')
           s=p.read_text(encoding='utf-8')
-          tag='<link rel="stylesheet" href="assets/joron-onboarding-2026.css?v=2026">'
-          if tag not in s:
-              marker='<link rel="stylesheet" href="assets/joron-global-2026.css?v=2026">'
-              if marker in s:
-                  s=s.replace(marker, marker+'\n'+tag, 1)
-              else:
-                  s=s.replace('</head>', tag+'\n</head>', 1)
-              p.write_text(s,encoding='utf-8')
+          css='<link rel="stylesheet" href="assets/joron-onboarding-2026.css?v=2026">'
+          js='<script type="module" src="assets/joron-onboarding-auth.js?v=2026"></script>'
+          marker='<link rel="stylesheet" href="assets/joron-global-2026.css?v=2026">'
+          if css not in s:
+              s=s.replace(marker, marker+'\n'+css, 1) if marker in s else s.replace('</head>',css+'\n</head>',1)
+          if js not in s:
+              s=s.replace('</body>',js+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Commit if changed
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add onboarding-v4.html
-          git diff --cached --quiet || git commit -m 'Apply JORON onboarding production theme'
+          git diff --cached --quiet || git commit -m 'Bind JORON onboarding to authenticated user flow'
           git push
