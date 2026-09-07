@@ -61,6 +61,7 @@ exports.passkeyAuthVerify = onRequest(async (req, res) => {
 exports.passkeyHealth = onRequest((req, res) => { cors(req, res); return res.json({ ok: true, service: "JORON Matrimony Passkey", rpId: RP_ID }); });
 
 Object.assign(module.exports, require("./identifier-auth"));
+Object.assign(module.exports, require("./support"));
 
 exports.adminListPendingPayments = onRequest(async (req, res) => {
   cors(req, res); if (req.method === "OPTIONS") return res.status(204).send(""); if (req.method !== "GET") return jsonError(res, 405, "GET required");
