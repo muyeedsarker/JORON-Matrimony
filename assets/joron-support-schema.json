@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "collections": {
+    "supportTickets": {
+      "ticketId": "string",
+      "uid": "string",
+      "category": "account|profile|biodata|matching|membership|payment|privacy|safety|technical|other",
+      "subject": "string",
+      "message": "string",
+      "status": "open|ai_handled|pending_admin|in_progress|resolved|closed",
+      "priority": "low|normal|high|urgent",
+      "source": "web|ai|admin",
+      "aiSummary": "string",
+      "aiConfidence": "number 0..1",
+      "escalationReason": "string|null",
+      "assignedAdminUid": "string|null",
+      "createdAt": "timestamp",
+      "updatedAt": "timestamp",
+      "lastReplyAt": "timestamp|null"
+    },
+    "supportMessages": {
+      "messageId": "string",
+      "ticketId": "string",
+      "senderType": "customer|ai|admin",
+      "senderUid": "string|null",
+      "text": "string",
+      "createdAt": "timestamp"
+    },
+    "supportArticles": {
+      "articleId": "string",
+      "title": "string",
+      "category": "string",
+      "content": "string",
+      "status": "draft|published|archived",
+      "version": "string",
+      "updatedAt": "timestamp",
+      "updatedBy": "string"
+    }
+  },
+  "admin_queue": ["urgent", "high", "pending_admin", "payment", "safety", "fraud", "privacy"],
+  "ai_boundary": "AI may answer approved FAQ/knowledge questions and create support tickets. Account mutations, payment verification, refunds, moderation, identity decisions and security-sensitive actions require backend/admin authorization."
+}
