@@ -1,0 +1,16 @@
+/* JORON Home — clean production header */
+.ji-header{background:#FFFFFF!important;border-bottom:1px solid #E6E4F7!important}
+.ji-nav{width:min(1180px,calc(100% - 32px))!important;min-height:70px!important;display:grid!important;grid-template-columns:210px minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important}
+.ji-logo{min-width:0!important;display:flex!important;align-items:center!important;gap:9px!important}
+.ji-logo-mark{width:38px!important;height:38px!important;flex:0 0 38px!important;font-size:20px!important}
+.ji-logo strong{font-size:22px!important;line-height:1!important;letter-spacing:1px!important}
+.ji-logo small{font-size:9px!important;line-height:1!important;margin-top:3px!important;letter-spacing:.15px!important}
+.ji-menu{display:flex!important;align-items:center!important;justify-content:center!important;gap:2px!important;white-space:nowrap!important}
+.ji-menu a{padding:8px 11px!important;border-radius:8px!important;font-size:12px!important;font-weight:600!important;line-height:1.2!important}
+.ji-actions{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;white-space:nowrap!important}
+.ji-icon{width:34px!important;height:34px!important;font-size:15px!important}
+.ji-profile{font-size:12px!important;gap:6px!important}
+.ji-avatar{width:32px!important;height:32px!important}
+@media(max-width:1000px){.ji-nav{grid-template-columns:190px minmax(0,1fr)!important}.ji-actions{display:none!important}}
+@media(max-width:700px){.ji-nav{width:calc(100% - 24px)!important;display:flex!important;justify-content:space-between!important;min-height:64px!important}.ji-menu{display:none!important}.ji-logo strong{font-size:20px!important}.ji-logo small{font-size:8px!important}.ji-logo-mark{width:36px!important;height:36px!important;flex-basis:36px!important}}
+@media(max-width:360px){.ji-logo small{display:none!important}.ji-logo strong{font-size:19px!important}}
