@@ -54,6 +54,7 @@ input:focus,select:focus,textarea:focus,.field input:focus,.field select:focus,.
 @media(max-width:390px){.site-header .brand>span:last-child{min-width:120px!important;max-width:165px!important}.site-header .brand strong{font-size:28px!important}.site-header .brand small{font-size:10px!important}}
 </style><link rel="stylesheet" href="assets/joron-polish-2026.css">
 <link rel="stylesheet" href="assets/joron-global-2026.css?v=2026">
+<link rel="stylesheet" href="assets/joron-onboarding-2026.css?v=2026">
 </head><body>
 <header class="site-header"><div class="container nav-wrap"><a class="brand" href="index.html"><span><strong>JORON</strong><small>সম্পর্ক জুড়ে দেয় জোড়ন</small></span></a><nav class="main-nav"><a href="index.html">হোম</a><a href="profiles.html">প্রোফাইল</a><a href="matching.html">ম্যাচিং</a><a class="btn btn-gold" href="dashboard.html">Dashboard</a></nav></div></header>
 <main class="wrap">
@@ -112,4 +113,5 @@ input:focus,select:focus,textarea:focus,.field input:focus,.field select:focus,.
 (function(){const pairs=[['division','pdivision'],['district','pdistrict'],['upazila','pupazila'],['postOffice','ppostOffice'],['postalCode','ppostalCode'],['ward','pward'],['area','parea'],['village','pvillage']];function copy(){pairs.forEach(([a,b])=>{const x=document.getElementById(a),y=document.getElementById(b);if(x&&y){y.value=x.value;y.dispatchEvent(new Event('change',{bubbles:true}))}})}document.getElementById('sameAddress')?.addEventListener('change',e=>{if(e.target.checked)copy()});pairs.forEach(([a])=>document.getElementById(a)?.addEventListener('change',()=>{if(document.getElementById('sameAddress')?.checked)copy()}));})();
 </script>
 <script type="module" src="assets/smart-biodata-firebase-legacy.js"></script>
+<script src="assets/joron-smart-biodata-bridge.js?v=2026"></script>
 </body></html>
