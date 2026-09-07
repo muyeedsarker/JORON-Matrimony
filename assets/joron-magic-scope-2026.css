@@ -1,0 +1,9 @@
+/* JORON 2026 — Magic scope: Country/Language belong only to first onboarding page. */
+:root{--joron-purple:#534AB7;--joron-purple-dark:#26215C;--joron-purple-light:#EEEDFE;--joron-purple-mid:#7F77DD;--joron-emerald:#639922;--joron-emerald-dark:#27500A;--joron-emerald-light:#EAF3DE;--joron-emerald-mid:#97C459;--joron-text:#2C2C2A;--joron-muted:#5F5E5A;--joron-white:#FFFFFF}
+/* Magic is a discovery page: no country/language selectors or selector-like controls. */
+#country,#language,#countrySelect,#languageSelect,[name="country"],[name="language"],[name="countrySelect"],[name="languageSelect"],[data-field="country"],[data-field="language"],[data-filter="country"],[data-filter="language"]{display:none!important}
+.magic-country,.magic-language,.country-select,.language-select,.country-filter,.language-filter,.country-field,.language-field{display:none!important}
+/* Keep every Magic action compact; no oversized CTA buttons. */
+.joron-global-page-nav a,.joron-global-page-nav button,.bottom-nav a,.bottom-nav button{min-height:0!important;height:auto!important;padding:6px 10px!important;font-size:9px!important;border-radius:999px!important;line-height:1.2!important}
+.hero-actions a{min-height:0!important;height:auto!important;padding:6px 10px!important;font-size:9px!important;border-radius:999px!important}
+@media(max-width:520px){.joron-global-page-nav a,.joron-global-page-nav button,.bottom-nav a,.bottom-nav button,.hero-actions a{padding:5px 8px!important;font-size:8px!important}}
