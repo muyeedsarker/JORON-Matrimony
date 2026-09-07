@@ -11,7 +11,7 @@
     '🕌 ধর্ম ও Community':{en:'🕌 Religion & Community',hi:'🕌 धर्म और Community'},'ধর্ম নির্বাচন করুন':{en:'Select religion',hi:'धर्म चुनें'},'Community / মত':{en:'Community / School of thought',hi:'Community / मत'},'আগে ধর্ম নির্বাচন করুন':{en:'Select religion first',hi:'पहले धर्म चुनें'},'✓ ধর্ম বদলালে Community তালিকা অটো বদলাবে।':{en:'✓ Changing religion will automatically update the Community list.',hi:'✓ धर्म बदलने पर Community सूची अपने-आप अपडेट होगी।'},
     '📍 আপনার ঠিকানা':{en:'📍 Your Address',hi:'📍 आपका पता'},'বিভাগ':{en:'Division',hi:'विभाग'},'বিভাগ নির্বাচন করুন':{en:'Select division',hi:'विभाग चुनें'},'আগে বিভাগ নির্বাচন করুন':{en:'Select division first',hi:'पहले विभाग चुनें'},'জেলা নির্বাচন করুন':{en:'Select district',hi:'जिला चुनें'},
     '❤️ জীবনসঙ্গীর পছন্দ':{en:'❤️ Partner Preferences',hi:'❤️ जीवनसाथी की पसंद'},'এগুলো Smart Biodata-এর একই preference field-এ যাবে। পরে এখানে বা Smart Biodata-তে পরিবর্তন করলে একই তথ্য রাখা হবে।':{en:'These will use the same preference fields as Smart Biodata. Changes here or in Smart Biodata stay synchronized.',hi:'ये Smart Biodata के उन्हीं preference fields में जाएँगे। यहाँ या Smart Biodata में बदलाव करने पर जानकारी समान रहेगी।'},
-    'Partner Gender':{en:'Partner Gender',hi:'Partner Gender'},'অটো নির্বাচন':{en:'Auto select',hi:'ऑटो चयन'},'বয়স — সর্বনিম্ন':{en:'Age — Minimum',hi:'उम्र — न्यूनतम'},'বয়স — সর্বোচ্চ':{en:'Age — Maximum',hi:'उम्र — अधिकतम'},'Partner Religion':{en:'Partner Religion',hi:'Partner Religion'},'যেকোনো ধর্ম':{en:'Any religion',hi:'कोई भी धर्म'},'Partner Community':{en:'Partner Community',hi:'Partner Community'},'যেকোনো Community':{en:'Any Community',hi:'कोई भी Community'},'Partner District':{en:'Partner District',hi:'Partner District'},'যেকোনো জেলা':{en:'Any district',hi:'कोई भी जिला'},'Partner Education':{en:'Partner Education',hi:'Partner Education'},'যেকোনো শিক্ষা':{en:'Any education',hi:'कोई भी शिक्षा'},
+    'Partner Gender':{en:'Partner Gender',hi:'Partner Gender'},'অটো নির্বাচন':{en:'Auto select',hi:'ऑटो चयन'},'বয়স — সর্বনিম্ন':{en:'Age — Minimum',hi:'उम्र — न्यूनतम'},'বয়স — সর্বোচ্চ':{en:'Age — Maximum',hi:'उम्र — अधिकतम'},'Partner Religion':{en:'Partner Religion',hi:'Partner Religion'},'যেকোনো ধর্ম':{en:'Any religion',hi:'कोई भी धर्म'},'Partner Community':{en:'Partner Community',hi:'Partner Community'},'যেকোনো Community':{en:'Any Community',hi:'कोई भी Community'},'Partner District':{en:'Partner District',hi:'Partner District'},'যেকোনো জেলা':{en:'Any district',hi:'कोई भी जिला'},'Partner Education':{en:'Partner Education',hi:'Partner Education'},'যেকোনো শিক্ষা':{en:'Any education',hi:'Any education'},
     'JORON Matrimony প্রস্তুত!':{en:'JORON Matrimony is ready!',hi:'JORON Matrimony तैयार है!'},'আপনার Onboarding তথ্য সংরক্ষিত। এখন Smart Biodata-তে বাকি তথ্য এক ধাপ করে পূরণ করুন।':{en:'Your onboarding information is saved. Now complete the remaining details step by step in Smart Biodata.',hi:'आपकी onboarding जानकारी सेव हो गई है। अब Smart Biodata में बाकी जानकारी चरण-दर-चरण भरें।'},'📝 Smart Biodata শুরু করুন':{en:'📝 Start Smart Biodata',hi:'📝 Smart Biodata शुरू करें'},'❤️ Matching দেখুন':{en:'❤️ View Matching',hi:'❤️ Matching देखें'},
     '← পিছনে':{en:'← Back',hi:'← पीछे'},'পরের ধাপ →':{en:'Next →',hi:'अगला →'},'শেষ করুন →':{en:'Finish →',hi:'समाप्त →'},
     'নিজের জন্য':{en:'Myself',hi:'स्वयं'},'ছেলের জন্য':{en:'Son',hi:'बेटा'},'মেয়ের জন্য':{en:'Daughter',hi:'बेटी'},'ভাইয়ের জন্য':{en:'Brother',hi:'भाई'},'বোনের জন্য':{en:'Sister',hi:'बहन'},'বন্ধুর জন্য':{en:'Friend',hi:'मित्र'},'আত্মীয়ের জন্য':{en:'Relative',hi:'रिश्तेदार'}
@@ -28,4 +28,20 @@
   }
   function init(){apply();setInterval(apply,500);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+
+  /* Security gate: Smart Profile Setup is available only after Firebase sign-in. */
+  (async function(){
+    try{
+      const {auth}=await import('../assets/firebase-client.js');
+      const {onAuthStateChanged}=await import('https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js');
+      onAuthStateChanged(auth,user=>{
+        if(!user){
+          sessionStorage.setItem('joronReturnAfterLogin','onboarding-v4.html');
+          location.replace('login.html?next='+encodeURIComponent('onboarding-v4.html'));
+        }
+      });
+    }catch(err){
+      console.error('JORON onboarding auth guard error:',err);
+    }
+  })();
 })();
