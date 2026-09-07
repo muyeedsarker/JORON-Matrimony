@@ -1,75 +1,30 @@
 name: Apply Home Theme to Smart Biodata
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   polish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Apply consistent JORON theme
+      - uses: actions/checkout@v4
+      - name: Ensure Smart Biodata theme and onboarding handoff
         shell: python
         run: |
           from pathlib import Path
-          p = Path('smart-biodata.html')
-          s = p.read_text(encoding='utf-8')
-          marker = 'joron-biodata-theme-match-v2'
-          if marker in s:
-              print('Smart Biodata theme already applied.')
-              raise SystemExit(0)
-
-          # Reuse the site's shared theme files when available.
-          if 'assets/joron-master-theme.css' not in s:
-              s = s.replace('<link rel="stylesheet" href="assets/style.css">', '<link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/joron-master-theme.css">')
-          if 'assets/joron-live-fix.css' not in s:
-              s = s.replace('<link rel="stylesheet" href="assets/joron-clean.css">', '<link rel="stylesheet" href="assets/joron-clean.css"><link rel="stylesheet" href="assets/joron-live-fix.css">')
-
-          css = '''<style id="joron-biodata-theme-match-v2">
-          :root{--p:#64158f;--k:#d90b62;--g:#087b59}
-          body{background:linear-gradient(145deg,#fff 0%,#fff7fb 48%,#f5efff 100%)!important}
-          .bio-wrap{width:min(920px,92%)!important;padding:22px 0 48px!important}
-          .hero{background:linear-gradient(135deg,#fff5fa,#f4eaff 60%,#edfff7)!important;border:1px solid #eadbea!important;border-radius:30px!important;box-shadow:0 10px 28px rgba(70,25,90,.10),0 0 60px rgba(217,11,98,.06)!important}
-          .hero h1{color:var(--p)!important;font-weight:800!important}
-          .hero p{color:#4a3d55!important;opacity:1!important}
-          .badge,.bio-badge{display:inline-flex!important;align-items:center!important;padding:7px 12px!important;border-radius:999px!important;background:#f0e3ff!important;border:1px solid #d8c1ed!important;color:var(--p)!important;font-weight:900!important;font-size:12px!important;margin-bottom:12px!important}
-          .form-section,.bio-card{background:linear-gradient(145deg,#fff 0%,#fffafd 55%,#f7efff 100%)!important;border:1px solid #eadfea!important;border-radius:24px!important;padding:24px 20px!important;margin:0 0 20px!important;box-shadow:0 10px 28px rgba(70,25,90,.10)!important}
-          .form-section h2,.bio-card h2{color:var(--p)!important;font-size:22px!important;font-weight:800!important;margin:0 0 6px!important}
-          .form-section>p,.bio-card>p{color:#687078!important;font-size:13px!important;margin:0 0 16px!important}
-          .field label{display:block!important;font-weight:800!important;color:#30143f!important;font-size:13px!important;margin-bottom:6px!important}
-          input[type=text],input[type=email],input[type=number],input[type=date],select,textarea,.field input,.field select,.field textarea{width:100%!important;border:1px solid #e2d8e6!important;border-radius:14px!important;padding:12px 14px!important;background:#fff!important;color:#20202b!important;transition:.18s!important}
-          input:focus,select:focus,textarea:focus,.field input:focus,.field select:focus,.field textarea:focus{outline:none!important;border-color:var(--p)!important;box-shadow:0 0 0 3px rgba(100,21,143,.12)!important}
-          .required-mark{color:var(--k)!important;font-weight:900!important}
-          .btn.save,.save-btn,button[type=submit]{background:linear-gradient(135deg,var(--k),#e51b76 48%,var(--p))!important;color:#fff!important;border:0!important;border-radius:15px!important;padding:16px!important;font-weight:900!important;font-size:16px!important;box-shadow:0 10px 22px rgba(210,11,90,.22)!important}
-          .btn.back{background:#fff!important;border:1px solid #e2d8e6!important;color:#4a3d55!important;border-radius:15px!important}
-          .actions .btn{transition:transform .2s ease,box-shadow .2s ease!important}
-          .actions .btn:active{transform:scale(.97)!important}
-          .btn.save:hover,.save-btn:hover,button[type=submit]:hover{transform:translateY(-2px)!important;box-shadow:0 16px 32px rgba(217,11,98,.30)!important}
-          .progress div{background:linear-gradient(90deg,var(--k),var(--p),var(--g))!important}
-          .status{border:1px solid #eadfea!important;background:linear-gradient(145deg,#fff,#f7efff)!important}
-          @media(max-width:650px){.bio-wrap{width:calc(100% - 28px)!important;padding-top:14px!important}.form-section,.bio-card{padding:20px 16px!important;border-radius:22px!important}.hero{border-radius:25px!important}}
-          </style>'''
-          s = s.replace('</head>', css + '</head>', 1)
-          badge = '<div class="bio-badge">📝 ধাপে ধাপে আপনার Biodata সম্পূর্ণ করুন</div>'
-          s = s.replace('<section class="hero">', '<section class="hero">' + badge, 1)
-          s = s.replace('class="bio-card"', 'class="bio-card form-section"')
-          p.write_text(s, encoding='utf-8')
+          p=Path('smart-biodata.html')
+          s=p.read_text(encoding='utf-8')
+          css='<link rel="stylesheet" href="assets/joron-onboarding-2026.css?v=2026">'
+          if css not in s: s=s.replace('</head>',css+'\n</head>',1)
+          bridge='<script src="assets/joron-smart-biodata-bridge.js?v=2026"></script>'
+          if bridge not in s: s=s.replace('</body>',bridge+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
       - name: Commit if changed
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add smart-biodata.html
-          if git diff --cached --quiet; then
-            echo 'No changes to commit.'
-          else
-            git commit -m 'Match Smart Biodata with JORON home theme'
-            git push
-          fi
+          if git diff --cached --quiet; then echo 'No changes to commit.'; else git commit -m 'fix: connect onboarding data to Smart Biodata'; git push; fi
