@@ -1,0 +1,9 @@
+/* JORON vibrant visual enhancement layer */
+:root{--joron-rose:#e83e83;--joron-wine:#8f245e;--joron-gold:#f6b94a}
+body{background:linear-gradient(180deg,#fff 0%,#fff8fb 48%,#fff 100%)}
+.btn,button{transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}.btn:hover,button:hover{transform:translateY(-3px);filter:saturate(1.08);box-shadow:0 12px 28px rgba(143,36,94,.18)}
+section{scroll-margin-top:84px}
+img{transition:transform .5s ease}.profile:hover img{transform:scale(1.035)}
+@keyframes joronFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.hero-small-badge{animation:joronFloat 4s ease-in-out infinite}.hero-small-badge:nth-of-type(2){animation-delay:1s}
+@media(max-width:700px){.hero-small-badge{animation:none}}
