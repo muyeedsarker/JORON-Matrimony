@@ -1,0 +1,19 @@
+/* JORON 2026 — Smart Onboarding production visual layer. Strict Purple + Emerald + White palette. */
+:root{--j-primary:#534AB7;--j-dark:#26215C;--j-light:#EEEDFE;--j-mid:#7F77DD;--j-green:#639922;--j-green-dark:#27500A;--j-green-light:#EAF3DE;--j-green-mid:#97C459;--j-text:#2C2C2A;--j-muted:#5F5E5A;--j-white:#FFFFFF}
+body{background:var(--j-white)!important;color:var(--j-text)!important}
+.wrap{width:min(680px,94%)!important}
+.card{background:var(--j-white)!important;border:1px solid var(--j-mid)!important;box-shadow:0 12px 30px rgba(38,33,92,.10)!important}
+.brand{color:var(--j-primary)!important;font-family:Poppins,Inter,"Hind Siliguri",sans-serif!important}
+.brand small{color:var(--j-green-dark)!important}
+.tag{color:var(--j-muted)!important}
+.progress{background:var(--j-light)!important}
+.progress i{background:var(--j-primary)!important}
+.step{color:var(--j-muted)!important}.step b{border-color:var(--j-mid)!important;background:var(--j-white)!important;color:var(--j-primary)!important}.step.active b,.step.done b{background:var(--j-primary)!important;color:var(--j-white)!important;border-color:var(--j-primary)!important}.step.active{color:var(--j-dark)!important}
+h1{color:var(--j-dark)!important}
+p{color:var(--j-muted)!important}
+.choice{border-color:var(--j-mid)!important;background:var(--j-white)!important;color:var(--j-text)!important}.choice.selected{border-color:var(--j-primary)!important;background:var(--j-light)!important;box-shadow:0 0 0 3px rgba(83,74,183,.14)!important}
+.field label{color:var(--j-dark)!important}
+select,input{border-color:var(--j-mid)!important;background:var(--j-white)!important;color:var(--j-text)!important}select:focus,input:focus{outline:2px solid rgba(83,74,183,.18)!important;border-color:var(--j-primary)!important}
+.auto{background:var(--j-green-light)!important;border-color:var(--j-green-mid)!important;color:var(--j-green-dark)!important}.hint{background:var(--j-light)!important;border-color:var(--j-mid)!important;color:var(--j-dark)!important}
+.actions .back{background:var(--j-white)!important;border-color:var(--j-mid)!important;color:var(--j-dark)!important}.actions .next,.finish a{background:var(--j-primary)!important;color:var(--j-white)!important;border:0!important}.finish a.alt{background:var(--j-green)!important;color:var(--j-white)!important}
+@media(max-width:520px){.card{border-radius:20px!important}}
