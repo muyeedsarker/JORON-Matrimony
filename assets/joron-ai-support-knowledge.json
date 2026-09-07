@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-09-07",
+  "product": "JORON Matrimony",
+  "language": ["bn", "en"],
+  "identity": {
+    "name": "JORON",
+    "tagline": "সম্পর্ক জুড়ে দেয় জোড়ন ❤️",
+    "description": "JORON is a Bangladesh-first, privacy-conscious matrimonial matching platform focused on meaningful compatibility—not just biodata."
+  },
+  "support_policy": {
+    "ai_role": "Answer routine customer questions using only approved JORON knowledge. Never invent features, prices, payment status, verification status, policy decisions, or account facts.",
+    "escalate": ["payment dispute", "refund", "fraud", "fake profile", "harassment", "account recovery", "identity verification dispute", "privacy complaint", "legal or safety emergency", "anything requiring an admin decision"],
+    "fallback": "আমি নিশ্চিত নই—আপনার বিষয়টি একজন JORON Support Agent-এর কাছে পাঠানো হচ্ছে। অনুগ্রহ করে প্রয়োজনীয় তথ্য দিন।"
+  },
+  "knowledge": {
+    "registration": {
+      "steps": ["Personal Details", "Religious Details", "Location Details", "Professional Details", "Additional Details", "Profile Photo"],
+      "progress": [0, 20, 40, 60, 70, 90, 100]
+    },
+    "smart_biodata": "Smart Biodata তথ্য Profile, Search ও Matching-এর জন্য প্রস্তুত করার ভিত্তি।",
+    "profile": "Profile-এ ব্যবহারকারীর অনুমোদিত/public তথ্য প্রদর্শিত হবে। Privacy settings অনুযায়ী sensitive information সীমিত হতে পারে.",
+    "matching": "Matching সম্ভাব্য compatibility ও partner preferences-এর ভিত্তিতে profile recommendation তৈরি করার জন্য ব্যবহৃত হয়।",
+    "interest": "Interest পাঠানো, গ্রহণ, গ্রহণযোগ্যতা ও প্রত্যাখ্যানের মাধ্যমে সম্পর্কের প্রাথমিক যোগাযোগ শুরু করা যায়।",
+    "verification": "Profile verification ও verified badge-এর জন্য আলাদা verification process থাকতে পারে; AI নিজে কোনো profile verified ঘোষণা করবে না।",
+    "membership": {
+      "Basic / Silver": {"price_bdt": 700, "status": "enabled"},
+      "Gold": {"price_bdt": 1500, "backend_plan": "Standard", "status": "enabled"},
+      "Premium": {"price_bdt": 3500, "status": "enabled"},
+      "Premium+": {"price_bdt": null, "status": "coming_soon"}
+    },
+    "payment": "Payment submitted হলে verification প্রয়োজন। AI কখনো Transaction ID দেখে নিজে membership active ঘোষণা করবে না।",
+    "privacy": "Photo, phone number এবং profile visibility ব্যবহারকারীর privacy controls ও platform policy অনুযায়ী পরিচালিত হবে।",
+    "safety": "সন্দেহজনক, প্রতারণামূলক, হয়রানিমূলক বা unsafe আচরণ report করার ব্যবস্থা ব্যবহার করুন। গুরুতর safety issue হলে human support-এ escalate করতে হবে.",
+    "help_center": "Help Center registration, Biodata, Matching, Privacy ও Membership-এর সাধারণ প্রশ্নের উত্তর দেয়।"
+  },
+  "approved_response_rules": [
+    "Respond in the customer's language when possible.",
+    "Be concise, polite and operational.",
+    "Use only facts present in this knowledge base or verified account/backend data.",
+    "Never ask for passwords, OTPs, card PINs or other secret credentials.",
+    "Never expose another member's private information.",
+    "Do not promise refunds, verification, activation or policy exceptions without admin authority.",
+    "If knowledge is missing or conflicting, escalate instead of guessing."
+  ]
+}
