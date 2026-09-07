@@ -4,6 +4,18 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function own(uid) { return signedIn() && request.auth.uid == uid; }
     function mutual(a,b) { return signedIn() && a != b && get(/databases/$(database)/documents/interests/$(a + '_' + b)).data.status == 'accepted' && get(/databases/$(database)/documents/interests/$(b + '_' + a)).data.status == 'accepted'; }
+    function validPlanPrice() {
+      return (request.resource.data.membershipPlan == 'Basic' && request.resource.data.membershipPrice == 700) ||
+             (request.resource.data.membershipPlan == 'Standard' && request.resource.data.membershipPrice == 1500) ||
+             (request.resource.data.membershipPlan == 'Premium' && request.resource.data.membershipPrice == 3500);
+    }
+    function validPaymentCreate() {
+      return request.resource.data.uid == request.auth.uid &&
+        request.resource.data.paymentStatus == 'pending' &&
+        request.resource.data.membershipStatus == 'pending' &&
+        request.resource.data.membershipPlan in ['Basic','Standard','Premium'] &&
+        validPlanPrice();
+    }
     function publicBiodataKeys() { return ['uid','name','nickname','dob','age','gender','height','blood','marital','nationality','language','religion','practice','division','district','upazila','postOffice','postalCode','area','education','eduHighest','eduDegree','eduInstitution','eduSubject','eduYear','eduResult','profession','professionType','workplace','designation','experience','currentlyEmployed','familyType','childCount','personality','about','prefAge','prefDistrict','top3','visibility','profileCompleted','updatedAt']; }
     function publicProfileKeys() { return ['uid','name','nickname','age','gender','height','marital','division','district','upazila','postOffice','postalCode','religion','eduSystem','education','eduHighest','eduDegree','eduInstitution','eduSubject','eduYear','eduResult','profession','professionType','workplace','designation','experience','currentlyEmployed','familyType','childCount','personality','about','prefAge','prefDistrict','top3','photoUrl','visibility','educationSystem','institution','subject','passingYear','result','partner','profileCompleted','updatedAt']; }
     function validPublicProfile() { return request.resource.data.uid == request.auth.uid && request.resource.data.keys().hasOnly(publicBiodataKeys()); }
@@ -23,14 +35,15 @@ service cloud.firestore {
     }
     match /users/{userId} {
       allow read: if own(userId);
-      allow create: if own(userId) && (!request.resource.data.keys().hasAny(['membershipStatus','admin','isAdmin']) || request.resource.data.membershipStatus == 'pending');
-      allow update: if own(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['admin','isAdmin','membershipPlan','membershipStatus','paymentStatus']) || (own(userId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipRequestedAt']) && request.resource.data.membershipStatus == resource.data.membershipStatus && request.resource.data.paymentStatus == resource.data.paymentStatus && request.resource.data.membershipPlan == resource.data.membershipPlan);
+      allow create: if own(userId) && (!request.resource.data.keys().hasAny(['membershipStatus','membershipPlan','membershipPrice','paymentStatus']) || (request.resource.data.membershipStatus == 'pending' && request.resource.data.paymentStatus == 'pending' && validPlanPrice()));
+      allow update: if own(userId) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['membershipRequestedAt']) ||
+                    own(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['admin','isAdmin','membershipPlan','membershipPrice','membershipStatus','paymentStatus']);
       allow delete: if own(userId);
     }
     match /payments/{userId} {
       allow read: if own(userId);
-      allow create: if own(userId) && request.resource.data.uid == request.auth.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending';
-      allow update: if own(userId) && request.resource.data.uid == resource.data.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['senderNumber','transactionId','updatedAt']);
+      allow create: if own(userId) && validPaymentCreate();
+      allow update: if own(userId) && request.resource.data.uid == resource.data.uid && request.resource.data.paymentStatus == 'pending' && request.resource.data.membershipStatus == 'pending' && request.resource.data.membershipPlan == resource.data.membershipPlan && request.resource.data.membershipPrice == resource.data.membershipPrice && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['senderNumber','transactionId','updatedAt']);
       allow delete: if own(userId);
     }
     match /loginOtps/{docId} { allow read, write: if false; }
