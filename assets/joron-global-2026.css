@@ -1,0 +1,100 @@
+/* JORON — International Matrimony — 2026 Master Visual Layer
+   Strict palette: Purple + Emerald + White. No legacy theme colors.
+   Visual-only layer: existing Firebase/auth/form IDs and behavior remain untouched. */
+:root{
+  --j-purple:#534AB7;--j-purple-dark:#26215C;--j-purple-light:#EEEDFE;--j-purple-mid:#7F77DD;
+  --j-green:#639922;--j-green-dark:#27500A;--j-green-light:#EAF3DE;--j-green-mid:#97C459;
+  --j-text:#2C2C2A;--j-muted:#5F5E5A;--j-white:#FFFFFF;--j-line:#E5E5E5;
+  --j-shadow:0 12px 34px rgba(38,33,92,.08);--j-radius:16px;--j-pill:999px
+}
+*,*:before,*:after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0!important;background:var(--j-white)!important;color:var(--j-text)!important;font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif!important;line-height:1.6}
+a{color:inherit;text-decoration:none}img{max-width:100%;height:auto}button,input,select,textarea{font:inherit}
+h1,h2,h3,h4,h5,h6{color:var(--j-purple-dark)!important;font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif!important}
+p,li,label,small{color:var(--j-muted)}
+.container,.wrap{width:min(1180px,92%);margin-inline:auto}
+
+/* Shared navigation */
+.site-header,header,.ji-header{position:sticky!important;top:0!important;z-index:100!important;background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--j-line)!important;backdrop-filter:blur(12px)}
+.nav-wrap,.head,.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand,.ji-logo{display:flex;align-items:center;gap:10px;min-width:0}
+.brand strong,.ji-logo strong{display:block;color:var(--j-purple-dark)!important;font-family:"Poppins","Inter",system-ui,sans-serif!important;font-weight:700!important;letter-spacing:1px}
+.brand small,.ji-logo small{display:block;color:var(--j-green-dark)!important;font-family:"Poppins","Inter",system-ui,sans-serif!important;font-weight:600}
+.brand-mark,.ji-logo-mark{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--j-purple-light)!important;border:1px solid var(--j-purple-mid)!important;color:var(--j-purple)!important}
+.main-nav,.desktop-menu,.links,.ji-menu{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.main-nav>a,.desktop-menu a,.links a,.ji-menu a{padding:9px 12px;border-radius:10px;color:var(--j-muted)!important;font-size:13px;font-weight:600}
+.main-nav>a:hover,.desktop-menu a:hover,.links a:hover,.ji-menu a:hover,.main-nav>a.active,.desktop-menu a.active,.ji-menu a.active{background:var(--j-purple-light)!important;color:var(--j-purple-dark)!important}
+
+/* Buttons — only approved palette */
+.btn,.btn-gold,.btn-primary,.btn-outline,.btn-secondary,.primary-btn,.secondary-btn,.save-btn,.nav-login,.idbtn,.ji-btn,
+button,input[type=button],input[type=submit],input[type=reset]{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 18px;border-radius:9px!important;font-weight:700;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease!important}
+.btn,.btn-gold,.btn-primary,.primary-btn,.save-btn,.idbtn,.ji-primary,button[type=submit],input[type=submit]{background:var(--j-purple)!important;color:var(--j-white)!important;border:1px solid var(--j-purple)!important;box-shadow:none!important}
+.btn-outline,.btn-secondary,.secondary-btn,.nav-login,.ji-secondary,input[type=reset],button.is-secondary{background:var(--j-white)!important;color:var(--j-green-dark)!important;border:1px solid var(--j-green-mid)!important}
+.btn:hover,.btn-gold:hover,.btn-primary:hover,.btn-outline:hover,.btn-secondary:hover,.primary-btn:hover,.secondary-btn:hover,.save-btn:hover,.idbtn:hover,.ji-btn:hover,button:hover,input[type=submit]:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(38,33,92,.10)!important}
+
+/* Page shells / sections */
+.hero,.section-soft,.page-hero{background:var(--j-purple-light)!important}
+.hero,.page-hero{padding:38px 0 28px}
+.section{padding:40px 0}
+.section-heading,.title{text-align:center;margin-bottom:24px}
+.section-heading h1,.section-heading h2,.title h2{margin:6px 0;color:var(--j-purple-dark)!important}
+.section-heading p,.hero p{color:var(--j-muted)!important;max-width:720px}
+.eyebrow,.tag,.badge,.bio-badge{color:var(--j-purple-dark)!important;background:var(--j-white)!important;border:1px solid var(--j-purple-mid)!important;border-radius:var(--j-pill)!important}
+
+/* Cards / panels */
+.card,.card-ivory,.showcase,.quick,.panel,.surface,.list-card,.chat-panel,.match-card,.interest-card,.form-card,.auth-card,.profile-card,
+.form-section,.bio-card,.feature-card,.pricing-card,.story-card,.safe-card{background:var(--j-white)!important;border:1px solid var(--j-line)!important;border-radius:var(--j-radius)!important;box-shadow:var(--j-shadow)!important}
+.card,.card-ivory,.form-card,.auth-card,.form-section,.bio-card{padding:20px}
+.card h3,.profile-body h3,.feature-card h3{color:var(--j-purple-dark)!important}
+.card p,.profile-body p,.feature-card p{color:var(--j-muted)!important}
+.feature-icon,.heart-btn,.ji-link{color:var(--j-purple)!important}
+
+/* Profile / matching */
+.profile-grid,.feature-grid,.cards{gap:16px}
+.profile-card:hover,.card:hover,.match-card:hover,.interest-card:hover{border-color:var(--j-purple-mid)!important;transform:translateY(-3px)}
+.profile-card img{background:var(--j-purple-light)}
+.heart-btn{background:var(--j-white)!important;border:1px solid var(--j-purple-mid)!important}
+.search-bar,.filter-bar{display:flex;gap:10px;flex-wrap:wrap;padding:14px;background:var(--j-white)!important;border:1px solid var(--j-line)!important;border-radius:var(--j-radius)!important;box-shadow:var(--j-shadow)!important}
+
+/* Forms */
+input,select,textarea{width:100%;min-height:44px;padding:10px 13px;border:1px solid #D8D7E2!important;border-radius:10px!important;background:var(--j-white)!important;color:var(--j-text)!important;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--j-purple-mid)!important;box-shadow:0 0 0 3px rgba(127,119,221,.14)!important}
+.required-mark{color:var(--j-green-dark)!important}
+.progress div,.progress-bar{background:var(--j-purple)!important}
+.status{background:var(--j-green-light)!important;border-color:var(--j-green-mid)!important;color:var(--j-green-dark)!important}
+
+/* Trust / verification */
+.verified,.ji-verified,.trust-badge,.verification-badge{background:var(--j-green)!important;color:var(--j-white)!important;border-color:var(--j-green)!important}
+.safe,.safety,.safety-card,.ji-safety{background:var(--j-purple-light)!important;border-color:var(--j-line)!important}
+.safe-icon,.ji-safe-icon{background:var(--j-green-light)!important;color:var(--j-green-dark)!important}
+
+/* Pricing */
+.pricing,.pricing-section,.ji-pricing{background:var(--j-green-light)!important;border:1px solid var(--j-green-mid)!important;border-radius:20px}
+.popular,.popular-badge{background:var(--j-purple)!important;color:var(--j-white)!important;border-color:var(--j-purple-mid)!important}
+.price,.ji-price{color:var(--j-purple)!important}
+
+/* CTA */
+.cta,.cta-banner{background:var(--j-green-light)!important;border:1px solid var(--j-green-mid)!important;color:var(--j-purple-dark)!important}
+.cta h2,.cta h3,.cta-banner h2{color:var(--j-purple-dark)!important}
+.cta .btn,.cta-banner .btn{background:var(--j-purple)!important;color:var(--j-white)!important}
+
+/* Footer */
+footer,.site-footer,.ji-footer{background:var(--j-white)!important;color:var(--j-text)!important;border-top:1px solid var(--j-line)!important}
+.site-footer a,.foot a,.ji-footer a{color:var(--j-muted)!important}
+.site-footer a:hover,.foot a:hover,.ji-footer a:hover{color:var(--j-purple)!important}
+.footer-bottom,.copy,.ji-copy{border-top:1px solid var(--j-line)!important;color:var(--j-muted)!important}
+.footer-brand,.foot-brand,.ji-footer-brand{color:var(--j-purple-dark)!important}
+
+/* Old palette neutralisation for common legacy classes */
+.pink,.red,.gold,.gold-btn,.orange,.yellow,.blue,.navy,.rose,.green-btn{background:var(--j-purple)!important;color:var(--j-white)!important;border-color:var(--j-purple)!important}
+[style*="#c79a45"],[style*="#C79A45"],[style*="#8d682d"],[style*="#8D682D"],[style*="#fbf7ef"],[style*="#FBF7EF"],[style*="#64158f"],[style*="#30143f"],[style*="#faf7fb"]{background-color:var(--j-white)!important;color:var(--j-text)!important;border-color:var(--j-line)!important}
+
+/* Mobile */
+@media(max-width:900px){.main-nav,.desktop-menu{gap:3px}.hero-grid,.hero-card,.cta-grid{grid-template-columns:1fr!important}.feature-grid,.cards,.profile-grid{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:650px){.nav-wrap,.head,.nav{min-height:66px}.main-nav,.desktop-menu{display:none}.container,.wrap{width:calc(100% - 24px)}.feature-grid,.cards,.profile-grid{grid-template-columns:1fr 1fr!important}.form-card,.auth-card{padding:17px}.hero{padding-top:28px}.cta,.cta-banner{flex-direction:column;align-items:flex-start}}
+@media(max-width:390px){.feature-grid,.cards,.profile-grid{grid-template-columns:1fr!important}.brand strong,.ji-logo strong{font-size:24px!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* JORON identity */
+body:before{content:"";display:block;height:3px;background:var(--j-purple);position:fixed;top:0;left:0;right:0;z-index:10000;pointer-events:none}
