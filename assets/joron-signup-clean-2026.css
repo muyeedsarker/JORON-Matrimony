@@ -1,0 +1,24 @@
+/* JORON Signup — clean single-flow layout */
+:root{--jp:#534AB7;--jd:#26215C;--pl:#EEEDFE;--pm:#7F77DD;--eg:#639922;--ed:#27500A;--el:#EAF3DE;--em:#97C459;--nt:#2C2C2A;--nm:#5F5E5A;--white:#FFFFFF}
+body{background:var(--white)!important;color:var(--nt)!important;font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif!important}
+.signup-box{width:min(680px,calc(100% - 28px))!important;margin:28px auto!important;padding:28px 30px!important;background:#fff!important;border:1px solid var(--pm)!important;border-radius:22px!important;box-shadow:0 14px 40px rgba(38,33,92,.10)!important}
+.logo{font-family:Poppins,Inter,system-ui,sans-serif!important;font-size:30px!important;font-weight:800!important;letter-spacing:2px!important;color:var(--jp)!important;text-align:center!important;margin:0!important}
+.tagline{text-align:center!important;color:var(--nm)!important;margin:5px 0 20px!important;font-size:14px!important}
+.hero-title{background:var(--pl)!important;border:1px solid var(--pm)!important;border-radius:16px!important;padding:18px!important;margin-bottom:22px!important;text-align:center!important}
+.hero-title h1{margin:0!important;background:none!important;border:0!important;padding:0!important;color:var(--jd)!important;font-size:25px!important}
+.hero-guide{display:none!important}
+form{display:block!important}
+.step-title{margin:22px 0 10px!important;padding:10px 12px!important;background:var(--pl)!important;border:1px solid var(--pm)!important;border-radius:10px!important;color:var(--jd)!important;font-size:17px!important;font-weight:700!important}
+.step-title:first-child{margin-top:0!important}
+.field-label{display:block!important;margin:12px 0 5px!important;color:var(--nt)!important;font-weight:600!important}
+input:not([type=checkbox]),select,textarea{width:100%!important;box-sizing:border-box!important;min-height:44px!important;background:#fff!important;color:var(--nt)!important;border:1px solid var(--pm)!important;border-radius:10px!important;padding:9px 11px!important}
+input:focus,select:focus,textarea:focus{border-color:var(--jp)!important;box-shadow:0 0 0 3px rgba(83,74,183,.12)!important;outline:none!important}
+.fee-preview{margin-top:16px!important;background:var(--pl)!important;border:1px solid var(--pm)!important;border-radius:12px!important;padding:12px!important}
+.fee-row{display:flex!important;justify-content:space-between!important;gap:12px!important;padding:3px 0!important}.fee-row span:last-child{color:var(--ed)!important;font-weight:700!important}
+.fee-note,.hint,.note{color:var(--nm)!important;font-size:12px!important}
+.terms{display:flex!important;align-items:flex-start!important;gap:8px!important;margin:16px 0!important;color:var(--nm)!important}.terms input{margin-top:4px!important}.terms a,.login a,.back a{color:var(--jp)!important}
+.primary-btn{width:100%!important;min-height:46px!important;background:var(--jp)!important;color:#fff!important;border:1px solid var(--jp)!important;border-radius:10px!important;font-weight:700!important}
+.member-success{margin-top:22px!important;background:var(--el)!important;border:1px solid var(--em)!important;border-radius:14px!important;padding:18px!important;text-align:center!important}.member-id{background:#fff!important;border:1px solid var(--em)!important;color:var(--ed)!important;border-radius:10px!important;padding:10px!important;font-weight:800!important}
+.continue-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:8px 16px!important;background:var(--jp)!important;color:#fff!important;border-radius:10px!important}
+.login{text-align:center!important;margin:18px 0 8px!important;color:var(--nm)!important}.back{text-align:center!important}.back a{display:inline-block!important;padding:7px 12px!important;border:1px solid var(--em)!important;border-radius:9px!important;background:#fff!important}.note{text-align:center!important;margin-top:16px!important}
+@media(max-width:560px){.signup-box{width:calc(100% - 20px)!important;margin:10px auto!important;padding:20px 16px!important;border-radius:18px!important}.hero-title h1{font-size:21px!important}.step-title{font-size:16px!important}.logo{font-size:27px!important}}
