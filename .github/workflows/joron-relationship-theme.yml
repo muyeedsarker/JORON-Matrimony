@@ -1,0 +1,31 @@
+name: JORON Relationship Theme Sync
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject relationship theme
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('relationship.html')
+          s=p.read_text(encoding='utf-8')
+          link='<link rel="stylesheet" href="assets/joron-relationship-2026.css?v=2026">'
+          if link not in s:
+              s=s.replace('</head>', link+'</head>', 1)
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name 'JORON Theme Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add relationship.html
+          git diff --cached --quiet || git commit -m 'Apply JORON Relationship master theme'
+          git push
