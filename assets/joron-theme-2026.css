@@ -1,2 +1,37 @@
 /* JORON 2026 — single production theme entry point. */
 @import url('./joron-global-2026.css');
+
+/* JORON PREMIUM HOME V1 */
+.joron-top{background:linear-gradient(90deg,#fffaf0,#f7ead2,#fffaf0)!important;color:var(--gold-deep)!important;border-bottom:1px solid var(--gold-line)!important;letter-spacing:.2px!important}
+header .nav{min-height:86px!important}
+.desktop-menu a{box-shadow:0 5px 14px rgba(141,104,45,.08)!important;transition:transform .2s ease,box-shadow .2s ease,background .2s ease!important}
+.desktop-menu a:hover{transform:translateY(-2px)!important;box-shadow:0 10px 22px rgba(141,104,45,.14)!important}
+.desktop-menu a.btn-gold{box-shadow:0 8px 20px rgba(141,104,45,.22)!important}
+.hero{padding:48px 0 34px!important;background:radial-gradient(circle at 15% 15%,rgba(247,234,210,.7),transparent 32%),var(--ivory)!important}
+.hero-card{position:relative!important;overflow:hidden!important;padding:30px!important;border:1px solid rgba(199,154,69,.35)!important;border-radius:30px!important;background:linear-gradient(135deg,rgba(255,253,248,.96),rgba(250,241,224,.88))!important;box-shadow:0 18px 50px rgba(141,104,45,.12)!important}
+.hero-card:before{content:""!important;position:absolute!important;width:280px!important;height:280px!important;right:-120px!important;top:-130px!important;border-radius:50%!important;background:rgba(199,154,69,.10)!important;pointer-events:none!important}
+.hero-card:after{content:""!important;position:absolute!important;width:220px!important;height:220px!important;left:-120px!important;bottom:-130px!important;border-radius:50%!important;background:rgba(141,104,45,.06)!important;pointer-events:none!important}
+.hero-copy{position:relative!important;z-index:1!important}
+.hero-copy .badge{padding:8px 15px!important;border-radius:999px!important;border:1px solid var(--gold-line)!important;background:#fffaf0!important;box-shadow:0 5px 14px rgba(141,104,45,.07)!important}
+.hero-copy h1{font-size:clamp(40px,5.6vw,68px)!important;letter-spacing:-.4px!important;text-shadow:0 2px 18px rgba(141,104,45,.08)!important}
+.hero-copy h2{font-size:clamp(20px,2.5vw,29px)!important;color:var(--ink)!important;margin-top:4px!important}
+.hero-copy>p{font-size:18px!important;line-height:1.85!important}
+.hero-actions{gap:12px!important;margin-top:24px!important}
+.hero-actions a{min-width:170px!important;min-height:50px!important;box-shadow:0 8px 18px rgba(141,104,45,.12)!important}
+.hero-actions .btn-gold{background:linear-gradient(135deg,#c79a45,#a9792e)!important}
+.hero-actions .btn-outline{background:rgba(255,253,248,.95)!important}
+.hero-visual{position:relative!important;z-index:1!important;min-height:440px!important;border-radius:28px!important;background:linear-gradient(145deg,#f8eadb,#fffaf1 52%,#f2e0df)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 15px 35px rgba(141,104,45,.10)!important}
+.couple-art{width:100%!important;padding:18px!important;display:grid!important;place-items:center!important}
+.couple-art img{width:min(100%,430px)!important;max-height:420px!important;object-fit:contain!important;border-radius:22px!important;filter:drop-shadow(0 18px 20px rgba(80,50,20,.15))!important}
+.joron-trust{position:relative!important;z-index:2!important;margin-top:18px!important}
+.joron-trust-item{min-height:54px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:rgba(255,253,248,.9)!important;box-shadow:0 8px 20px rgba(141,104,45,.08)!important}
+.section{padding:58px 0!important}
+.section-heading h2,.title h2{font-size:clamp(28px,4vw,40px)!important}
+.cards .card,.feature-grid .card-ivory{border-radius:22px!important;box-shadow:0 10px 25px rgba(141,104,45,.08)!important}
+.cards .card:hover,.feature-grid .card-ivory:hover{transform:translateY(-6px)!important}
+.feature-icon{display:inline-grid!important;place-items:center!important;width:52px!important;height:52px!important;border-radius:16px!important;background:#fff7e8!important;border:1px solid var(--gold-line)!important}
+.cta,.cta-banner{position:relative!important;overflow:hidden!important;background:linear-gradient(135deg,#f7ead2,#fff8ec)!important;box-shadow:0 14px 35px rgba(141,104,45,.10)!important}
+footer,.site-footer{background:linear-gradient(180deg,#f3eadb,#eee2cf)!important}
+@media(max-width:900px){.hero-card{padding:24px!important}.hero-visual{min-height:360px!important}}
+@media(max-width:650px){.hero{padding:24px 0!important}.hero-card{padding:18px!important;border-radius:24px!important}.hero-copy h1{font-size:39px!important}.hero-copy>p{font-size:16px!important}.hero-actions{width:100%!important;flex-direction:column!important}.hero-actions a{width:100%!important}.hero-visual{min-height:300px!important;border-radius:22px!important}.couple-art img{max-height:300px!important}.section{padding:42px 0!important}.joron-trust-item{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){.desktop-menu a,.hero-actions a,.cards .card,.feature-grid .card-ivory{transform:none!important}}
