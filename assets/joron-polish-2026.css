@@ -6,56 +6,14 @@ input,select,textarea{border-radius:14px!important;border-color:var(--joron-line
 button,.btn,.btn-gold,.btn-primary,.primary-btn,.save-btn{border-radius:999px!important;min-height:44px}.btn-gold,.btn-primary,.primary-btn,.save-btn,button[type=submit]{background:var(--joron-gold)!important;border-color:var(--joron-deep)!important;color:#fff!important;box-shadow:0 7px 18px rgba(141,104,45,.14)!important}.btn-outline,.btn-secondary,.secondary-btn{background:var(--joron-paper)!important;border-color:var(--joron-gold)!important;color:var(--joron-deep)!important}
 .site-header,header{box-shadow:0 4px 18px rgba(80,60,30,.06)!important}.brand strong{letter-spacing:1.8px}.section{padding-top:52px;padding-bottom:52px}.section-heading h1,.section-heading h2,.title h2{letter-spacing:.1px}
 .hero,.hero-card{border-radius:24px}.hero-visual{box-shadow:inset 0 0 0 1px rgba(255,255,255,.45),var(--joron-shadow)}
-/* Preserve the approved full-skin couple artwork: this layer does not resize, crop, filter, recolor, or replace couple artwork. */
 .couple-art,.heart-art,.hero-visual img[src*="couple"],img[src$="couple.png"]{filter:none!important}
-/* Remove actual toggle/switch controls without affecting ordinary form checkboxes/radios used for consent, privacy and biodata input. */
 .switch,.toggle,[role="switch"],.toggle-button,.switch-button,.switch-control{display:none!important}
-/* 2026 matrimony conversion polish */
-:where(.hero,.hero-card){overflow:hidden}
-:where(.hero h1,.hero-card h1){font-weight:700;letter-spacing:-.35px}
-:where(.hero p,.hero-card p,.section-heading p){font-size:16px;line-height:1.8}
-:where(.actions,.hero-actions){gap:12px!important}
-:where(.actions a,.hero-actions a,.cta a,.cta-banner a){min-width:148px}
-:where(.profile-card,.match-card,.interest-card){overflow:hidden}
-:where(.profile-card img){transition:transform .25s ease}
-:where(.profile-card:hover img){transform:scale(1.025)}
-:where(.profile-body h3,.match-card h3,.interest-card h3){font-size:19px;line-height:1.35}
-:where(.profile-body p,.match-card p,.interest-card p){line-height:1.55}
-:where(.search-bar,.filter-bar){box-shadow:0 8px 24px rgba(100,72,28,.06);align-items:center}
-:where(.search-bar input,.search-bar select,.filter-bar input,.filter-bar select){min-height:48px}
-:where(.form-card,.auth-card,.bio-card,.form-section){position:relative}
-:where(.form-card,.auth-card,.bio-card,.form-section)::before{content:"";display:block;width:54px;height:3px;background:var(--joron-gold);border-radius:999px;margin-bottom:14px}
-:where(label){font-weight:600}
-:where(input[type=checkbox],input[type=radio]){accent-color:var(--joron-gold)}
-:where(.section-soft){border-top:1px solid rgba(223,205,168,.45);border-bottom:1px solid rgba(223,205,168,.45)}
-:where(.cta,.cta-banner){box-shadow:0 12px 30px rgba(100,72,28,.07)}
-:where(footer,.site-footer){box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-/* Landing-page attraction layer: strengthens the first impression without changing approved artwork or page structure. */
-.joron-top{letter-spacing:.1px;text-shadow:0 1px 0 rgba(255,255,255,.7)}
-.hero-card{box-shadow:0 18px 42px rgba(80,45,20,.08);border:1px solid rgba(199,154,69,.22)}
-.hero-copy .badge{box-shadow:0 5px 14px rgba(100,72,28,.06)}
-.hero-actions a{font-weight:800;letter-spacing:.1px}
-.joron-trust-item{backdrop-filter:blur(5px)}
-.cards{align-items:stretch}
-.cards .card{border:1px solid rgba(199,154,69,.22);box-shadow:0 9px 24px rgba(100,72,28,.06)}
-.cards .card .big{font-size:32px;line-height:1;margin-bottom:12px}
-.cards .card h3{font-weight:800}
-.cards .card p{min-height:3.4em}
-footer .foot>div:not(:first-child){backdrop-filter:blur(5px)}
-/* Profile → Matching → Relationship consistency */
-:where(.profiles,.results,.result,.list){gap:16px!important}
-:where(.profiles .card,.results .card,.result .card,.item,.interest-card,.match-card){border:1px solid rgba(199,154,69,.24)!important;border-radius:20px!important;background:linear-gradient(145deg,#fffdf8,#fffaf2)!important;box-shadow:0 10px 28px rgba(100,72,28,.07)!important}
-:where(.profiles .card,.results .card,.result .card,.item){overflow:hidden}
-:where(.cardtop,.match-card .cardtop){background:linear-gradient(145deg,#fffaf0,#f7edd9)!important}
-:where(.profiles .card h2,.results .card h2,.result .card h2,.item h3,.match-card h3,.interest-card h3){font-weight:800!important;letter-spacing:-.1px}
-:where(.info div,.meta,.status){border-radius:12px!important}
-:where(.view,.profile,.accept,.reject,.actions .btn){min-height:44px!important;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
-:where(.view,.profile){box-shadow:0 6px 16px rgba(100,72,28,.10)}
-:where(.accept){background:#087b59!important;color:#fff!important}
-:where(.reject){background:#fff5f5!important;color:#9d2020!important;border:1px solid #e8bcbc!important}
-:where(.tab){font-weight:800!important;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
-:where(.tab.active){box-shadow:0 7px 18px rgba(100,72,28,.14)}
-:where(.summary .tag,.clear){font-weight:800!important}
-@media(max-width:700px){.section{padding-top:34px;padding-bottom:34px}.hero-card{gap:22px!important}.hero-card .actions{gap:9px!important}.profile-grid{gap:12px!important}.card,.card-ivory,.form-card,.auth-card{border-radius:18px!important}.desktop-menu a{padding:7px 10px!important}.hero-copy h1,.hero-card h1{letter-spacing:-.2px}.actions a,.hero-actions a{min-width:0;flex:1 1 150px}.search-bar,.filter-bar{padding:12px}.search-bar input,.search-bar select,.filter-bar input,.filter-bar select{min-width:100%;flex-basis:100%}.cards .card p{min-height:0}.profiles,.results,.result{gap:12px!important}}
+:where(.hero,.hero-card){overflow:hidden}:where(.hero h1,.hero-card h1){font-weight:700;letter-spacing:-.35px}:where(.hero p,.hero-card p,.section-heading p){font-size:16px;line-height:1.8}:where(.actions,.hero-actions){gap:12px!important}:where(.actions a,.hero-actions a,.cta a,.cta-banner a){min-width:148px}:where(.profile-card,.match-card,.interest-card){overflow:hidden}:where(.profile-card img){transition:transform .25s ease}:where(.profile-card:hover img){transform:scale(1.025)}:where(.profile-body h3,.match-card h3,.interest-card h3){font-size:19px;line-height:1.35}:where(.profile-body p,.match-card p,.interest-card p){line-height:1.55}:where(.search-bar,.filter-bar){box-shadow:0 8px 24px rgba(100,72,28,.06);align-items:center}:where(.search-bar input,.search-bar select,.filter-bar input,.filter-bar select){min-height:48px}:where(.form-card,.auth-card,.bio-card,.form-section){position:relative}:where(.form-card,.auth-card,.bio-card,.form-section)::before{content:"";display:block;width:54px;height:3px;background:var(--joron-gold);border-radius:999px;margin-bottom:14px}:where(label){font-weight:600}:where(input[type=checkbox],input[type=radio]){accent-color:var(--joron-gold)}:where(.section-soft){border-top:1px solid rgba(223,205,168,.45);border-bottom:1px solid rgba(223,205,168,.45)}:where(.cta,.cta-banner){box-shadow:0 12px 30px rgba(100,72,28,.07)}:where(footer,.site-footer){box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.joron-top{letter-spacing:.1px;text-shadow:0 1px 0 rgba(255,255,255,.7)}.hero-card{box-shadow:0 18px 42px rgba(80,45,20,.08);border:1px solid rgba(199,154,69,.22)}.hero-copy .badge{box-shadow:0 5px 14px rgba(100,72,28,.06)}.hero-actions a{font-weight:800;letter-spacing:.1px}.joron-trust-item{backdrop-filter:blur(5px)}.cards{align-items:stretch}.cards .card{border:1px solid rgba(199,154,69,.22);box-shadow:0 9px 24px rgba(100,72,28,.06)}.cards .card .big{font-size:32px;line-height:1;margin-bottom:12px}.cards .card h3{font-weight:800}.cards .card p{min-height:3.4em}footer .foot>div:not(:first-child){backdrop-filter:blur(5px)}
+:where(.profiles,.results,.result,.list){gap:16px!important}:where(.profiles .card,.results .card,.result .card,.item,.interest-card,.match-card){border:1px solid rgba(199,154,69,.24)!important;border-radius:20px!important;background:linear-gradient(145deg,#fffdf8,#fffaf2)!important;box-shadow:0 10px 28px rgba(100,72,28,.07)!important}:where(.profiles .card,.results .card,.result .card,.item){overflow:hidden}:where(.cardtop,.match-card .cardtop){background:linear-gradient(145deg,#fffaf0,#f7edd9)!important}:where(.profiles .card h2,.results .card h2,.result .card h2,.item h3,.match-card h3,.interest-card h3){font-weight:800!important;letter-spacing:-.1px}:where(.info div,.meta,.status){border-radius:12px!important}:where(.view,.profile,.accept,.reject,.actions .btn){min-height:44px!important;display:inline-flex;align-items:center;justify-content:center;font-weight:800}:where(.view,.profile){box-shadow:0 6px 16px rgba(100,72,28,.10)}:where(.accept){background:#087b59!important;color:#fff!important}:where(.reject){background:#fff5f5!important;color:#9d2020!important;border:1px solid #e8bcbc!important}:where(.tab){font-weight:800!important;min-height:44px;display:inline-flex;align-items:center;justify-content:center}:where(.tab.active){box-shadow:0 7px 18px rgba(100,72,28,.14)}:where(.summary .tag,.clear){font-weight:800!important}
+/* Header simplification: keep only the highest-value actions. Existing links remain in the DOM for compatibility. */
+.desktop-menu a:nth-child(1),.desktop-menu a:nth-child(4),.desktop-menu a:nth-child(7){display:none!important}.desktop-menu{width:min(560px,100%)!important;grid-template-columns:repeat(4,minmax(0,1fr))!important}.desktop-menu a{font-size:12px!important}.desktop-menu a:nth-child(2){order:1}.desktop-menu a:nth-child(3){order:2}.desktop-menu a:nth-child(5){order:3}.desktop-menu a:nth-child(6){order:4}
+@media(max-width:700px){.section{padding-top:34px;padding-bottom:34px}.hero-card{gap:22px!important}.hero-card .actions{gap:9px!important}.profile-grid{gap:12px!important}.card,.card-ivory,.form-card,.auth-card{border-radius:18px!important}.desktop-menu{width:100%!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}.desktop-menu a{padding:7px 4px!important;font-size:10px!important}.hero-copy h1,.hero-card h1{letter-spacing:-.2px}.actions a,.hero-actions a{min-width:0;flex:1 1 150px}.search-bar,.filter-bar{padding:12px}.search-bar input,.search-bar select,.filter-bar input,.filter-bar select{min-width:100%;flex-basis:100%}.cards .card p{min-height:0}.profiles,.results,.result{gap:12px!important}}
 @media(max-width:620px){:where(.item){border-radius:18px!important}:where(.actions .btn,.view,.profile){width:100%;min-height:46px!important}.tabs{gap:8px!important}.tab{min-height:46px!important}}
+@media(max-width:390px){.desktop-menu{gap:4px!important}.desktop-menu a{font-size:9px!important;padding:6px 2px!important}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
